@@ -189,10 +189,10 @@ var LoftImages = (function ($, document) {
     self.pending = 0;
 
     // Calculate our sets to determine when we're done.
-    $svgSet = $context.find('*[data-' + s.dataSvgAttribute + ']:not(.' + s.onceClass + ')');
+    var $svgSet = $context.find('*[data-' + s.dataSvgAttribute + ']:not(.' + s.onceClass + ')');
     self.pending += $svgSet.length;
     
-    $retinaSet = $context.find('*[data-' + s.dataRetinaAttribute + ']:not(.' + s.onceClass + ')');
+    var $retinaSet = $context.find('*[data-' + s.dataRetinaAttribute + ']:not(.' + s.onceClass + ')');
     self.pending += $retinaSet.length;
     self.processed = 0;
 
@@ -278,7 +278,7 @@ var LoftImages = (function ($, document) {
   };
 
   Images.prototype.applySource = function (el, imagePath) {
-    el = el instanceof jQuery ? el.get(0) : image;
+    el = el instanceof jQuery ? el.get(0) : el;
     var tag   = el.nodeName.toLowerCase();
     if (tag === 'img') {
       $(el).attr('src', imagePath);
