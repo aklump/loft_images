@@ -1,0 +1,19 @@
+//
+// Generates the CSS needed for a raster background image with retina support.
+// 
+// If the image is called 'select-bg.png' then we're expecting another retina
+// image with the exact same aspect ratio, twice the size under the filename
+// 'select-bg@2x.png'.
+// 
+// @param $filename string The filename of the low res bg image, without ext.
+// @param $ext string The extension of the bg file without the '.'.
+// 
+// @see $retina_suffix
+// 
+@mixin loft_images_retina_background($filename, $ext) {
+  background-image: image_url($filename + '.' + $ext);
+  background-size: contain;
+  @media #{$loft_images_retina} {
+      background-image: image_url($filename + $loft_images_retina_suffix + '.' + $ext);
+  }  
+}
