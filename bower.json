@@ -7,7 +7,7 @@
     "main": [
         "LoftImages.js"
     ],
-    "name": "loft_images",
+    "name": "loft-images",
     "version": "1.2.1",
     "homepage": "http://www.intheloftstudios.com/packages/js/loft_images",
     "authors": [
