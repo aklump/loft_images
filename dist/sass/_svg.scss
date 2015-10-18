@@ -1,0 +1,129 @@
+//
+//
+// Adds css (bg, height, width) to use an svg icon with png fallback.
+// 
+// @param $filename string Must be in the compass images folder; do not include
+//   the extension.
+// @param $fallback_ext string Defines the extension for the fallback image.
+// 
+// Where icon.png and icon.svg exist in the images folder.
+// @code
+//   html: <div class="icon"></div>
+//   sass: @include svg_icon('icon'); or @include svg_icon('icon', 'png');
+// @endcode
+// 
+// If the files are icon.gif and icon.svg then do this:
+// @code
+//   html: <div class="icon"></div>
+//   sass: @include svg_icon('icon', 'gif');
+// @endcode
+// 
+// @see svg_background
+// @depends Modernizr.svg
+//
+@mixin loft_images_svg_icon($filename, $fallback_ext: null, $dimensions: null) {
+  $fallback_ext: $loft_images_svg_fallback_extension !default;
+  $_fallback: "#{$filename}.#{$fallback_ext}";
+  @include svg_background($filename, 'center', $fallback_ext);
+  display: block;
+  @include image_dimensions($_fallback, $dimensions);
+  background-size: contain;
+}
+
+//
+//
+// Use an svg as a background-image with raster fallback.
+// 
+// This does not worry about retina raster because a device that supports
+// svg should also be retina so it would never fallback to the retina raster.
+// 
+// Consider using svg_icon instead if the element is only serving as an icon.
+// This comes in handy if you're decorating, say, a title with an bg image.
+// 
+// * The raster image will only be downloaded if Modernizr does not detect 
+// svg support.
+// * The svg file will be written as a Data URI in the stylesheet, reducing the
+// http requests for the page.
+// 
+// @param $filename string Must be in the compass images folder; do not include
+//   the extension.
+// @param $bg_pos string The background-position declaration.
+// @param $fallback_ext string Defines the extension for the fallback image.
+// 
+// Where icon.png and icon.svg exist in the images folder, and have the natural
+// size of 20px x 20px...
+// 
+// @code
+//   html: <div class="icon"></div>
+//   sass: @include svg_background('icon', 'center', 20px, 20px);
+// @endcode
+// 
+// @depends Modernizr.svg
+//
+@mixin loft_images_svg_background($filename, $bg_pos: 'center', $fallback_ext: null) {
+  $fallback_ext: $loft_images_svg_fallback_extension !default;
+  // Embeds our svg as a data uri to eliminate an http request.
+  background-repeat: no-repeat;
+  @if $bg_pos {
+    background-position: #{$bg_pos};
+  }
+  background-image: inline-image("#{$filename}.svg", "image/svg+xml");
+  html.modernizr-no-svg & {
+    // Will only load this if modernizr detects no svn support.
+    background-image: image-url("#{$filename}.#{$fallback_ext}");
+  }
+}
+
+//
+//
+// Automatically applies padding based on image size (+gap) so the bg is not
+// covered by the element content.
+//
+@mixin loft_images_svg_smart_background($filename, $bg_pos: 'center', $gap: 0, $fallback_ext: null) {
+  $fallback_ext: $loft_images_svg_fallback_extension !default;
+  @include svg_background($filename, $bg_pos, $fallback_ext);
+  
+  $_padding--v: null;
+  $_padding--h: null;
+  $_pngFile: "#{$filename}.#{$fallback_ext}";
+  $_height: image_height($_pngFile);
+
+  @if str-index($bg_pos, 'right') != null {
+    $_padding--h: 'right';
+  }
+  @elseif str-index($bg_pos, 'left') != null {
+    $_padding--h: 'left';
+  }
+  
+  @if str-index($bg_pos, 'top') != null {
+    $_padding--v: 'top';
+  }
+  @elseif str-index($bg_pos, 'bottom') != null{
+    $_padding--v: 'bottom';
+  }
+  
+  @if unit($gap) == 'px' {
+    @if $_padding--h {
+      $_width: image_width($_pngFile);
+      padding-#{$_padding--h}: $_width + $gap;  
+    }
+    @if $_padding--v {
+      padding-#{$_padding--v}: $_height + $gap;  
+    }
+  }
+  
+  // If our gap is not given in pixels use calc().
+  @else {
+    @if $_padding--h {
+      $_width: image_width($_pngFile);
+      padding-#{$_padding--h}: calc(#{$_width} + #{$gap});  
+    }
+    @if $_padding--v {
+      padding-#{$_padding--v}: calc(#{$_height} + #{$gap});  
+    }
+  }
+
+  @if $_padding--v == null {
+    line-height: $_height;
+  }
+}

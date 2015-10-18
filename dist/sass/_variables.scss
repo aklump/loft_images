@@ -1,0 +1,19 @@
+
+//
+//
+// @see LoftImages.js This should match Images.protoype.options.retinaMediaQuery
+//
+$loft_images_retina_media_query: "(-webkit-min-device-pixel-ratio: 2), (-o-min-device-pixel-ratio: 3/2), (min--moz-device-pixel-ratio: 2), (min-device-pixel-ratio: 2), (min-resolution: 144dppx)";
+
+//
+// Sets the default suffix to be used for retina stuff.  Some convention
+// uses @2x, but this seems like a bad idea for at least two reasons:
+// 
+// 1. sprite candidates cannot be named using '@'
+// 2. '@' for a filename should be reserved for the user part of an url.
+// 
+// @see LoftImages.js This should match Images.protoype.options.retinaSuffix
+// 
+$loft_images_retina_suffix: '-2x' !default;
+
+$loft_images_svg_fallback_extension: "png";
