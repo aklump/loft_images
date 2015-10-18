@@ -11,7 +11,6 @@ try {
 
   // Replace bower components.
   $data              = json_decode(file_get_contents($bower));
-  $data->name        = $argv[3];
   $data->version     = $argv[2];
   $data->homepage    = $argv[5];
   $data->authors     = array($argv[6]);
