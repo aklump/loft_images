@@ -1,178 +1,224 @@
-define([
-	"./core",
-	"./var/rnotwhite",
-	"./core/access",
-	"./data/var/data_priv",
-	"./data/var/data_user"
-], function( jQuery, rnotwhite, access, data_priv, data_user ) {
+(function( jQuery ) {
 
-//	Implementation Summary
-//
-//	1. Enforce API surface and semantic compatibility with 1.9.x branch
-//	2. Improve the module's maintainability by reducing the storage
-//		paths to a single mechanism.
-//	3. Use the same single mechanism to support "private" and "user" data.
-//	4. _Never_ expose "private" data to user code (TODO: Drop _data, _removeData)
-//	5. Avoid exposing implementation details on user objects (eg. expando properties)
-//	6. Provide a clear path for implementation upgrade to WeakMap in 2014
-
-var rbrace = /^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,
-	rmultiDash = /([A-Z])/g;
-
-function dataAttr( elem, key, data ) {
-	var name;
-
-	// If nothing was found internally, try to fetch any
-	// data from the HTML5 data-* attribute
-	if ( data === undefined && elem.nodeType === 1 ) {
-		name = "data-" + key.replace( rmultiDash, "-$1" ).toLowerCase();
-		data = elem.getAttribute( name );
-
-		if ( typeof data === "string" ) {
-			try {
-				data = data === "true" ? true :
-					data === "false" ? false :
-					data === "null" ? null :
-					// Only convert to a number if it doesn't change the string
-					+data + "" === data ? +data :
-					rbrace.test( data ) ? jQuery.parseJSON( data ) :
-					data;
-			} catch( e ) {}
-
-			// Make sure we set the data so it isn't changed later
-			data_user.set( elem, key, data );
-		} else {
-			data = undefined;
-		}
-	}
-	return data;
-}
+var windowData = {},
+	rbrace = /^(?:\{.*\}|\[.*\])$/;
 
 jQuery.extend({
-	hasData: function( elem ) {
-		return data_user.hasData( elem ) || data_priv.hasData( elem );
+	cache: {},
+
+	// Please use with caution
+	uuid: 0,
+
+	// Unique for each copy of jQuery on the page	
+	expando: "jQuery" + jQuery.now(),
+
+	// The following elements throw uncatchable exceptions if you
+	// attempt to add expando properties to them.
+	noData: {
+		"embed": true,
+		// Ban all objects except for Flash (which handle expandos)
+		"object": "clsid:D27CDB6E-AE6D-11cf-96B8-444553540000",
+		"applet": true
 	},
 
 	data: function( elem, name, data ) {
-		return data_user.access( elem, name, data );
+		if ( !jQuery.acceptData( elem ) ) {
+			return;
+		}
+
+		elem = elem == window ?
+			windowData :
+			elem;
+
+		var isNode = elem.nodeType,
+			id = isNode ? elem[ jQuery.expando ] : null,
+			cache = jQuery.cache, thisCache;
+
+		if ( isNode && !id && typeof name === "string" && data === undefined ) {
+			return;
+		}
+
+		// Get the data from the object directly
+		if ( !isNode ) {
+			cache = elem;
+
+		// Compute a unique ID for the element
+		} else if ( !id ) {
+			elem[ jQuery.expando ] = id = ++jQuery.uuid;
+		}
+
+		// Avoid generating a new cache unless none exists and we
+		// want to manipulate it.
+		if ( typeof name === "object" ) {
+			if ( isNode ) {
+				cache[ id ] = jQuery.extend(cache[ id ], name);
+
+			} else {
+				jQuery.extend( cache, name );
+			}
+
+		} else if ( isNode && !cache[ id ] ) {
+			cache[ id ] = {};
+		}
+
+		thisCache = isNode ? cache[ id ] : cache;
+
+		// Prevent overriding the named cache with undefined values
+		if ( data !== undefined ) {
+			thisCache[ name ] = data;
+		}
+
+		return typeof name === "string" ? thisCache[ name ] : thisCache;
 	},
 
 	removeData: function( elem, name ) {
-		data_user.remove( elem, name );
+		if ( !jQuery.acceptData( elem ) ) {
+			return;
+		}
+
+		elem = elem == window ?
+			windowData :
+			elem;
+
+		var isNode = elem.nodeType,
+			id = isNode ? elem[ jQuery.expando ] : elem,
+			cache = jQuery.cache,
+			thisCache = isNode ? cache[ id ] : id;
+
+		// If we want to remove a specific section of the element's data
+		if ( name ) {
+			if ( thisCache ) {
+				// Remove the section of cache data
+				delete thisCache[ name ];
+
+				// If we've removed all the data, remove the element's cache
+				if ( isNode && jQuery.isEmptyObject(thisCache) ) {
+					jQuery.removeData( elem );
+				}
+			}
+
+		// Otherwise, we want to remove all of the element's data
+		} else {
+			if ( isNode && jQuery.support.deleteExpando ) {
+				delete elem[ jQuery.expando ];
+
+			} else if ( elem.removeAttribute ) {
+				elem.removeAttribute( jQuery.expando );
+
+			// Completely remove the data cache
+			} else if ( isNode ) {
+				delete cache[ id ];
+
+			// Remove all fields from the object
+			} else {
+				for ( var n in elem ) {
+					delete elem[ n ];
+				}
+			}
+		}
 	},
 
-	// TODO: Now that all calls to _data and _removeData have been replaced
-	// with direct calls to data_priv methods, these can be deprecated.
-	_data: function( elem, name, data ) {
-		return data_priv.access( elem, name, data );
-	},
+	// A method for determining if a DOM node can handle the data expando
+	acceptData: function( elem ) {
+		if ( elem.nodeName ) {
+			var match = jQuery.noData[ elem.nodeName.toLowerCase() ];
 
-	_removeData: function( elem, name ) {
-		data_priv.remove( elem, name );
+			if ( match ) {
+				return !(match === true || elem.getAttribute("classid") !== match);
+			}
+		}
+
+		return true;
 	}
 });
 
 jQuery.fn.extend({
 	data: function( key, value ) {
-		var i, name, data,
-			elem = this[ 0 ],
-			attrs = elem && elem.attributes;
+		var data = null;
 
-		// Gets all values
-		if ( key === undefined ) {
+		if ( typeof key === "undefined" ) {
 			if ( this.length ) {
-				data = data_user.get( elem );
+				var attr = this[0].attributes, name;
+				data = jQuery.data( this[0] );
 
-				if ( elem.nodeType === 1 && !data_priv.get( elem, "hasDataAttrs" ) ) {
-					i = attrs.length;
-					while ( i-- ) {
+				for ( var i = 0, l = attr.length; i < l; i++ ) {
+					name = attr[i].name;
 
-						// Support: IE11+
-						// The attrs elements can be null (#14894)
-						if ( attrs[ i ] ) {
-							name = attrs[ i ].name;
-							if ( name.indexOf( "data-" ) === 0 ) {
-								name = jQuery.camelCase( name.slice(5) );
-								dataAttr( elem, name, data[ name ] );
-							}
-						}
+					if ( name.indexOf( "data-" ) === 0 ) {
+						name = name.substr( 5 );
+						dataAttr( this[0], name, data[ name ] );
 					}
-					data_priv.set( elem, "hasDataAttrs", true );
 				}
 			}
 
 			return data;
-		}
 
-		// Sets multiple values
-		if ( typeof key === "object" ) {
+		} else if ( typeof key === "object" ) {
 			return this.each(function() {
-				data_user.set( this, key );
+				jQuery.data( this, key );
 			});
 		}
 
-		return access( this, function( value ) {
-			var data,
-				camelKey = jQuery.camelCase( key );
+		var parts = key.split(".");
+		parts[1] = parts[1] ? "." + parts[1] : "";
 
-			// The calling jQuery object (element matches) is not empty
-			// (and therefore has an element appears at this[ 0 ]) and the
-			// `value` parameter was not undefined. An empty jQuery object
-			// will result in `undefined` for elem = this[ 0 ] which will
-			// throw an exception if an attempt to read a data cache is made.
-			if ( elem && value === undefined ) {
-				// Attempt to get data from the cache
-				// with the key as-is
-				data = data_user.get( elem, key );
-				if ( data !== undefined ) {
-					return data;
-				}
+		if ( value === undefined ) {
+			data = this.triggerHandler("getData" + parts[1] + "!", [parts[0]]);
 
-				// Attempt to get data from the cache
-				// with the key camelized
-				data = data_user.get( elem, camelKey );
-				if ( data !== undefined ) {
-					return data;
-				}
-
-				// Attempt to "discover" the data in
-				// HTML5 custom data-* attrs
-				data = dataAttr( elem, camelKey, undefined );
-				if ( data !== undefined ) {
-					return data;
-				}
-
-				// We tried really hard, but the data doesn't exist.
-				return;
+			// Try to fetch any internally stored data first
+			if ( data === undefined && this.length ) {
+				data = jQuery.data( this[0], key );
+				data = dataAttr( this[0], key, data );
 			}
 
-			// Set the data...
-			this.each(function() {
-				// First, attempt to store a copy or reference of any
-				// data that might've been store with a camelCased key.
-				var data = data_user.get( this, camelKey );
+			return data === undefined && parts[1] ?
+				this.data( parts[0] ) :
+				data;
 
-				// For HTML5 data-* attribute interop, we have to
-				// store property names with dashes in a camelCase form.
-				// This might not apply to all properties...*
-				data_user.set( this, camelKey, value );
+		} else {
+			return this.each(function() {
+				var $this = jQuery( this ),
+					args = [ parts[0], value ];
 
-				// *... In the case of properties that might _actually_
-				// have dashes, we need to also store a copy of that
-				// unchanged property.
-				if ( key.indexOf("-") !== -1 && data !== undefined ) {
-					data_user.set( this, key, value );
-				}
+				$this.triggerHandler( "setData" + parts[1] + "!", args );
+				jQuery.data( this, key, value );
+				$this.triggerHandler( "changeData" + parts[1] + "!", args );
 			});
-		}, null, value, arguments.length > 1, null, true );
+		}
 	},
 
 	removeData: function( key ) {
 		return this.each(function() {
-			data_user.remove( this, key );
+			jQuery.removeData( this, key );
 		});
 	}
 });
 
-return jQuery;
-});
+function dataAttr( elem, key, data ) {
+	// If nothing was found internally, try to fetch any
+	// data from the HTML5 data-* attribute
+	if ( data === undefined && elem.nodeType === 1 ) {
+		data = elem.getAttribute( "data-" + key );
+
+		if ( typeof data === "string" ) {
+			try {
+				data = data === "true" ? true :
+				data === "false" ? false :
+				data === "null" ? null :
+				!jQuery.isNaN( data ) ? parseFloat( data ) :
+					rbrace.test( data ) ? jQuery.parseJSON( data ) :
+					data;
+			} catch( e ) {}
+
+			// Make sure we set the data so it isn't changed later
+			jQuery.data( elem, key, data );
+
+		} else {
+			data = undefined;
+		}
+	}
+
+	return data;
+}
+
+})( jQuery );

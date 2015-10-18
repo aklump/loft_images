@@ -1,58 +1,42 @@
-define([
-	"./core",
-	"./var/indexOf",
-	"./traversing/var/rneedsContext",
-	"./core/init",
-	"./traversing/findFilter",
-	"./selector"
-], function( jQuery, indexOf, rneedsContext ) {
+(function( jQuery ) {
 
-var rparentsprev = /^(?:parents|prev(?:Until|All))/,
-	// Methods guaranteed to produce a unique set when starting from a unique set
-	guaranteedUnique = {
-		children: true,
-		contents: true,
-		next: true,
-		prev: true
-	};
-
-jQuery.extend({
-	dir: function( elem, dir, until ) {
-		var matched = [],
-			truncate = until !== undefined;
-
-		while ( (elem = elem[ dir ]) && elem.nodeType !== 9 ) {
-			if ( elem.nodeType === 1 ) {
-				if ( truncate && jQuery( elem ).is( until ) ) {
-					break;
-				}
-				matched.push( elem );
-			}
-		}
-		return matched;
-	},
-
-	sibling: function( n, elem ) {
-		var matched = [];
-
-		for ( ; n; n = n.nextSibling ) {
-			if ( n.nodeType === 1 && n !== elem ) {
-				matched.push( n );
-			}
-		}
-
-		return matched;
-	}
-});
+var runtil = /Until$/,
+	rparentsprev = /^(?:parents|prevUntil|prevAll)/,
+	// Note: This RegExp should be improved, or likely pulled from Sizzle
+	rmultiselector = /,/,
+	isSimple = /^.[^:#\[\.,]*$/,
+	slice = Array.prototype.slice,
+	POS = jQuery.expr.match.POS;
 
 jQuery.fn.extend({
-	has: function( target ) {
-		var targets = jQuery( target, this ),
-			l = targets.length;
+	find: function( selector ) {
+		var ret = this.pushStack( "", "find", selector ),
+			length = 0;
 
+		for ( var i = 0, l = this.length; i < l; i++ ) {
+			length = ret.length;
+			jQuery.find( selector, this[i], ret );
+
+			if ( i > 0 ) {
+				// Make sure that the results are unique
+				for ( var n = length; n < ret.length; n++ ) {
+					for ( var r = 0; r < length; r++ ) {
+						if ( ret[r] === ret[n] ) {
+							ret.splice(n--, 1);
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		return ret;
+	},
+
+	has: function( target ) {
+		var targets = jQuery( target );
 		return this.filter(function() {
-			var i = 0;
-			for ( ; i < l; i++ ) {
+			for ( var i = 0, l = targets.length; i < l; i++ ) {
 				if ( jQuery.contains( this, targets[i] ) ) {
 					return true;
 				}
@@ -60,73 +44,114 @@ jQuery.fn.extend({
 		});
 	},
 
+	not: function( selector ) {
+		return this.pushStack( winnow(this, selector, false), "not", selector);
+	},
+
+	filter: function( selector ) {
+		return this.pushStack( winnow(this, selector, true), "filter", selector );
+	},
+	
+	is: function( selector ) {
+		return !!selector && jQuery.filter( selector, this ).length > 0;
+	},
+
 	closest: function( selectors, context ) {
-		var cur,
-			i = 0,
-			l = this.length,
-			matched = [],
-			pos = rneedsContext.test( selectors ) || typeof selectors !== "string" ?
-				jQuery( selectors, context || this.context ) :
-				0;
+		var ret = [], i, l, cur = this[0];
 
-		for ( ; i < l; i++ ) {
-			for ( cur = this[i]; cur && cur !== context; cur = cur.parentNode ) {
-				// Always skip document fragments
-				if ( cur.nodeType < 11 && (pos ?
-					pos.index(cur) > -1 :
+		if ( jQuery.isArray( selectors ) ) {
+			var match, selector,
+				matches = {},
+				level = 1;
 
-					// Don't pass non-elements to Sizzle
-					cur.nodeType === 1 &&
-						jQuery.find.matchesSelector(cur, selectors)) ) {
+			if ( cur && selectors.length ) {
+				for ( i = 0, l = selectors.length; i < l; i++ ) {
+					selector = selectors[i];
 
-					matched.push( cur );
+					if ( !matches[selector] ) {
+						matches[selector] = jQuery.expr.match.POS.test( selector ) ? 
+							jQuery( selector, context || this.context ) :
+							selector;
+					}
+				}
+
+				while ( cur && cur.ownerDocument && cur !== context ) {
+					for ( selector in matches ) {
+						match = matches[selector];
+
+						if ( match.jquery ? match.index(cur) > -1 : jQuery(cur).is(match) ) {
+							ret.push({ selector: selector, elem: cur, level: level });
+						}
+					}
+
+					cur = cur.parentNode;
+					level++;
+				}
+			}
+
+			return ret;
+		}
+
+		var pos = POS.test( selectors ) ? 
+			jQuery( selectors, context || this.context ) : null;
+
+		for ( i = 0, l = this.length; i < l; i++ ) {
+			cur = this[i];
+
+			while ( cur ) {
+				if ( pos ? pos.index(cur) > -1 : jQuery.find.matchesSelector(cur, selectors) ) {
+					ret.push( cur );
 					break;
+
+				} else {
+					cur = cur.parentNode;
+					if ( !cur || !cur.ownerDocument || cur === context ) {
+						break;
+					}
 				}
 			}
 		}
 
-		return this.pushStack( matched.length > 1 ? jQuery.unique( matched ) : matched );
+		ret = ret.length > 1 ? jQuery.unique(ret) : ret;
+		
+		return this.pushStack( ret, "closest", selectors );
 	},
-
-	// Determine the position of an element within the set
+	
+	// Determine the position of an element within
+	// the matched set of elements
 	index: function( elem ) {
-
-		// No argument, return index in parent
-		if ( !elem ) {
-			return ( this[ 0 ] && this[ 0 ].parentNode ) ? this.first().prevAll().length : -1;
+		if ( !elem || typeof elem === "string" ) {
+			return jQuery.inArray( this[0],
+				// If it receives a string, the selector is used
+				// If it receives nothing, the siblings are used
+				elem ? jQuery( elem ) : this.parent().children() );
 		}
-
-		// Index in selector
-		if ( typeof elem === "string" ) {
-			return indexOf.call( jQuery( elem ), this[ 0 ] );
-		}
-
 		// Locate the position of the desired element
-		return indexOf.call( this,
-
+		return jQuery.inArray(
 			// If it receives a jQuery object, the first element is used
-			elem.jquery ? elem[ 0 ] : elem
-		);
+			elem.jquery ? elem[0] : elem, this );
 	},
 
 	add: function( selector, context ) {
-		return this.pushStack(
-			jQuery.unique(
-				jQuery.merge( this.get(), jQuery( selector, context ) )
-			)
-		);
+		var set = typeof selector === "string" ?
+				jQuery( selector, context || this.context ) :
+				jQuery.makeArray( selector ),
+			all = jQuery.merge( this.get(), set );
+
+		return this.pushStack( isDisconnected( set[0] ) || isDisconnected( all[0] ) ?
+			all :
+			jQuery.unique( all ) );
 	},
 
-	addBack: function( selector ) {
-		return this.add( selector == null ?
-			this.prevObject : this.prevObject.filter(selector)
-		);
+	andSelf: function() {
+		return this.add( this.prevObject );
 	}
 });
 
-function sibling( cur, dir ) {
-	while ( (cur = cur[dir]) && cur.nodeType !== 1 ) {}
-	return cur;
+// A painfully simple check to see if an element is disconnected
+// from a document (should be improved, where feasible).
+function isDisconnected( node ) {
+	return !node || !node.parentNode || node.parentNode.nodeType === 11;
 }
 
 jQuery.each({
@@ -141,10 +166,10 @@ jQuery.each({
 		return jQuery.dir( elem, "parentNode", until );
 	},
 	next: function( elem ) {
-		return sibling( elem, "nextSibling" );
+		return jQuery.nth( elem, 2, "nextSibling" );
 	},
 	prev: function( elem ) {
-		return sibling( elem, "previousSibling" );
+		return jQuery.nth( elem, 2, "previousSibling" );
 	},
 	nextAll: function( elem ) {
 		return jQuery.dir( elem, "nextSibling" );
@@ -159,41 +184,116 @@ jQuery.each({
 		return jQuery.dir( elem, "previousSibling", until );
 	},
 	siblings: function( elem ) {
-		return jQuery.sibling( ( elem.parentNode || {} ).firstChild, elem );
+		return jQuery.sibling( elem.parentNode.firstChild, elem );
 	},
 	children: function( elem ) {
 		return jQuery.sibling( elem.firstChild );
 	},
 	contents: function( elem ) {
-		return elem.contentDocument || jQuery.merge( [], elem.childNodes );
+		return jQuery.nodeName( elem, "iframe" ) ?
+			elem.contentDocument || elem.contentWindow.document :
+			jQuery.makeArray( elem.childNodes );
 	}
 }, function( name, fn ) {
 	jQuery.fn[ name ] = function( until, selector ) {
-		var matched = jQuery.map( this, fn, until );
-
-		if ( name.slice( -5 ) !== "Until" ) {
+		var ret = jQuery.map( this, fn, until );
+		
+		if ( !runtil.test( name ) ) {
 			selector = until;
 		}
 
 		if ( selector && typeof selector === "string" ) {
-			matched = jQuery.filter( selector, matched );
+			ret = jQuery.filter( selector, ret );
 		}
 
-		if ( this.length > 1 ) {
-			// Remove duplicates
-			if ( !guaranteedUnique[ name ] ) {
-				jQuery.unique( matched );
-			}
+		ret = this.length > 1 ? jQuery.unique( ret ) : ret;
 
-			// Reverse order for parents* and prev-derivatives
-			if ( rparentsprev.test( name ) ) {
-				matched.reverse();
-			}
+		if ( (this.length > 1 || rmultiselector.test( selector )) && rparentsprev.test( name ) ) {
+			ret = ret.reverse();
 		}
 
-		return this.pushStack( matched );
+		return this.pushStack( ret, name, slice.call(arguments).join(",") );
 	};
 });
 
-return jQuery;
+jQuery.extend({
+	filter: function( expr, elems, not ) {
+		if ( not ) {
+			expr = ":not(" + expr + ")";
+		}
+
+		return elems.length === 1 ?
+			jQuery.find.matchesSelector(elems[0], expr) ? [ elems[0] ] : [] :
+			jQuery.find.matches(expr, elems);
+	},
+	
+	dir: function( elem, dir, until ) {
+		var matched = [],
+			cur = elem[ dir ];
+
+		while ( cur && cur.nodeType !== 9 && (until === undefined || cur.nodeType !== 1 || !jQuery( cur ).is( until )) ) {
+			if ( cur.nodeType === 1 ) {
+				matched.push( cur );
+			}
+			cur = cur[dir];
+		}
+		return matched;
+	},
+
+	nth: function( cur, result, dir, elem ) {
+		result = result || 1;
+		var num = 0;
+
+		for ( ; cur; cur = cur[dir] ) {
+			if ( cur.nodeType === 1 && ++num === result ) {
+				break;
+			}
+		}
+
+		return cur;
+	},
+
+	sibling: function( n, elem ) {
+		var r = [];
+
+		for ( ; n; n = n.nextSibling ) {
+			if ( n.nodeType === 1 && n !== elem ) {
+				r.push( n );
+			}
+		}
+
+		return r;
+	}
 });
+
+// Implement the identical functionality for filter and not
+function winnow( elements, qualifier, keep ) {
+	if ( jQuery.isFunction( qualifier ) ) {
+		return jQuery.grep(elements, function( elem, i ) {
+			var retVal = !!qualifier.call( elem, i, elem );
+			return retVal === keep;
+		});
+
+	} else if ( qualifier.nodeType ) {
+		return jQuery.grep(elements, function( elem, i ) {
+			return (elem === qualifier) === keep;
+		});
+
+	} else if ( typeof qualifier === "string" ) {
+		var filtered = jQuery.grep(elements, function( elem ) {
+			return elem.nodeType === 1;
+		});
+
+		if ( isSimple.test( qualifier ) ) {
+			return jQuery.filter(qualifier, filtered, !keep);
+		} else {
+			qualifier = jQuery.filter( qualifier, filtered );
+		}
+	}
+
+	return jQuery.grep(elements, function( elem, i ) {
+		return (jQuery.inArray( elem, qualifier ) >= 0) === keep;
+	});
+}
+
+})( jQuery );
