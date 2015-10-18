@@ -104,6 +104,8 @@ var LoftImages = (function ($, document) {
     // file.  The retina file must use the same filename with
     // the addition of the retinaSuffix, as seen below.
     // E.g. <img data-image-src="image.jpg"/>
+    // 
+    // @see _variables.scss This should match $loft_images_retina_suffix
     dataRetinaAttribute : 'image-src',
     
     // Used to concantenate the non-retina filename with it's extension
@@ -113,6 +115,7 @@ var LoftImages = (function ($, document) {
 
     // Defines the media query to use that defines when we have a retina
     // device.
+    // @see _variables.scss This should match $loft_images_retina_media_query
     retinaMediaQuery    : '(-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3/2), (min-resolution: 1.5dppx)',
 
     // When the DOM is processed this will be used as the jQuery context.
@@ -129,9 +132,6 @@ var LoftImages = (function ($, document) {
 
     // Set to true and the constructor will call .processDom().
     autoProcessDom      : false,
-
-    // Register a callback when the DOM has been fully processed.
-    onProcessDomDone    : null,
 
     // CSS classnames
     onceClass           : 'loft-images',

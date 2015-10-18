@@ -1,0 +1,34 @@
+//
+// A mixin to make an img responsive.
+// 
+// Will grow beyond native width of image unless you specify $full = false.
+// 
+@mixin loft_images_responsive_img($full: true) {
+  height: auto;
+  vertical-align: bottom;
+  display: block;
+  margin: auto;
+  @if $full == true {
+    max-width: auto;
+    width: 100%;
+  }
+  @else {
+    max-width: 100%;
+    width: auto;
+  }
+}
+
+//
+//
+// Applies width and height to an image, defaulting to the native dimensions.
+//
+@mixin loft_images_dimensions($filename, $dimensions: null) {
+  @if length($dimensions) == 2 {
+    width: nth($dimensions, 1);
+    height: nth($dimensions, 2);
+  }
+  @else {  
+    width: image-width($filename);
+    height: image-height($filename);
+  }
+}
