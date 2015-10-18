@@ -1,20 +1,20 @@
 {
-  "ignore": [
-    ".web_package",
-    "web_package.info",
-    ".gitignore"
-  ],
-  "main": [
-    "LoftImages.js"
-  ],
-  "name": "Loft Images",
-  "version": "0.0.1",
-  "homepage": "http://www.intheloftstudios.com/packages/js/loft_images",
-  "authors": [
-    "Aaron Klump <sourcecode@intheloftstudios.com>"
-  ],
-  "description": "Retina and SVG Handling by In the Loft Studios",
-  "devDependencies": {
-    "jquery": "~2.1.4"
-  }
+    "ignore": [
+        ".web_package",
+        "web_package.info",
+        ".gitignore"
+    ],
+    "main": [
+        "LoftImages.js"
+    ],
+    "name": "Loft Images",
+    "version": "1.0",
+    "homepage": "http://www.intheloftstudios.com/packages/js/loft_images",
+    "authors": [
+        "Aaron Klump <sourcecode@intheloftstudios.com>"
+    ],
+    "description": "Retina and SVG Handling by In the Loft Studios",
+    "devDependencies": {
+        "jquery": "~2.1.4"
+    }
 }

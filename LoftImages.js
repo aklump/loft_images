@@ -1,5 +1,5 @@
 /**
- * Loft Images JavaScript Module v0.0.1
+ * Loft Images JavaScript Module v1.0
  * http://www.intheloftstudios.com/packages/js/loft_images
  *
  * Retina and SVG Handling by In the Loft Studios
@@ -7,7 +7,7 @@
  * Copyright 2015, Aaron Klump <sourcecode@intheloftstudios.com>
  * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Thu Oct 15 16:18:46 PDT 2015
+ * Date: Sun Oct 18 08:13:43 PDT 2015
  */
 /**
  * @code
@@ -71,7 +71,7 @@
 var LoftImages = (function ($, document) {
 
   function Images (settings) {
-    this.version = "0.0.1";
+    this.version = "1.0";
 
     // These are the options with default values.
     if (typeof settings === 'string') {
@@ -106,7 +106,7 @@ var LoftImages = (function ($, document) {
     // E.g. <img data-image-src="image.jpg"/>
     // 
     // @see _variables.scss This should match $loft_images_retina_suffix
-    dataRetinaAttribute : 'image-src',
+    dataRetinaAttribute : 'no-retina-src',
     
     // Used to concantenate the non-retina filename with it's extension
     // For a file image.png it would work like this 
