@@ -48,7 +48,7 @@
 // @param $filename string Must be in the compass images folder; do not include
 //   the extension.
 // @param $bg_pos string The background-position declaration.
-// @param $fallback_ext string Defines the extension for the fallback image.
+// @param string $fallback_ext Usually png; omit the dot.
 // 
 // Where icon.png and icon.svg exist in the images folder, and have the natural
 // size of 20px x 20px...
@@ -78,8 +78,24 @@
 //
 // Automatically applies padding based on image size (+gap) so the bg is not
 // covered by the element content.
+// 
+// USE THIS WHEN YOU WANTING TO PLACE AN SVG IN A BACKGROUND OF SOMETHING LIKE
+// A TITLE ELEMENT THAT HAS SPACE BEYOND THE ICON.
+// 
+// @param string $filename Without the extension.
+// @param string $bg_pos Will be passed to background-position:
+// @param unit $gap The gap between the icon and the content.
+// @param string $fallback_ext Usually png; omit the dot.
+// 
+// To place an icon (alert.svg/alert.png) on the left of a title, where
+// the icon has a 10px left margin and a 10px gap, try:
+// @code
+//   h1 {
+//     loft_images_svg_smart_background('alert', (10px, center), 10px);
+//   }
+// @endcode
 //
-@mixin loft_images_svg_smart_background($filename, $bg_pos: 'center', $gap: 0, $fallback_ext: null) {
+@mixin loft_images_svg_smart_background($filename, $bg_pos: center, $gap: 0, $fallback_ext: null) {
   $fallback_ext: $loft_images_svg_fallback_extension !default;
   @include loft_images_svg_background($filename, $bg_pos, $fallback_ext);
   
@@ -88,42 +104,75 @@
   $_pngFile: "#{$filename}.#{$fallback_ext}";
   $_height: image_height($_pngFile);
 
-  @if str-index($bg_pos, 'right') != null {
-    $_padding--h: 'right';
-  }
-  @elseif str-index($bg_pos, 'left') != null {
-    $_padding--h: 'left';
-  }
-  
-  @if str-index($bg_pos, 'top') != null {
-    $_padding--v: 'top';
-  }
-  @elseif str-index($bg_pos, 'bottom') != null{
-    $_padding--v: 'bottom';
-  }
-  
-  @if unit($gap) == 'px' {
-    @if $_padding--h {
-      $_width: image_width($_pngFile);
-      padding-#{$_padding--h}: $_width + $gap;  
+  // Try to make sense of a string.
+  @if type_of($bg_pos) == 'string' {
+    $_split: str-index($bg_pos, ' ');
+    @if $_split {
+      $bg_pos: (str-split($bg_pos, 0, $_split), str-split($bg_pos, $_split + 1));  
     }
-    @if $_padding--v {
-      padding-#{$_padding--v}: $_height + $gap;  
+    @else {
+      $bg_pos: ($bg_pos, $bg_pos, )
     }
   }
-  
-  // If our gap is not given in pixels use calc().
-  @else {
-    @if $_padding--h {
-      $_width: image_width($_pngFile);
-      padding-#{$_padding--h}: calc(#{$_width} + #{$gap});  
+
+  @if type_of($bg_pos) != 'list' {
+    @warn 'bg_pos argument should be a list, e.g., 10px bottom';
+  }
+
+  $_pos--h: nth($bg_pos, 1);
+  $_pos--v: nth($bg_pos, 2);
+  $_padding--h: ();
+  $_padding--v: ();
+
+  @if $_pos--h {
+    @if $_pos--h != 'center' {
+      $_padding--h: "left";
     }
-    @if $_padding--v {
-      padding-#{$_padding--v}: calc(#{$_height} + #{$gap});  
+    // @if $_pos--h == 'center' {
+    //   $_padding--h: "left" "right";
+    // }
+    @if $_pos--h == 'right' {
+      $_padding--h: "right";
+    }
+  }
+  @if $_pos--v {
+    @if $_pos--v != 'center' {
+      $_padding--v: "top";  
+    }
+    // @if $_pos--v == 'center' {
+    //   $_padding--v: "top" "bottom";
+    // }
+    @if $_pos--v == 'bottom' {
+      $_padding--v: "bottom";
+    }
+  }
+  
+  @if $_padding--h != null {
+    $_gap: $gap + $_pos--h;
+    $_width: image_width($_pngFile);
+    @each $_attr in $_padding--h {
+      @if unit($gap) == 'px' {
+        padding-#{$_attr}: $_width + $_gap;
+      }
+      @else {
+        padding-#{$_attr}: calc(${$_width} + #{$_gap});
+      }
+    }
+  }
+  @if $_padding--v != null {
+    $_gap: $gap + $_pos--v;
+    @each $_attr in $_padding--v {
+      @if unit($gap) == 'px' {
+        padding-#{$_attr}: $_height + $_gap;
+      }
+      @else {
+        padding-#{$_attr}: calc(${$_height} + #{$_gap});
+      }
     }
   }
 
   @if $_padding--v == null {
     line-height: $_height;
-  }
+  }    
+
 }
