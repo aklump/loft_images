@@ -31,10 +31,10 @@
 @mixin loft_images_png_retina_icon($filename, $dimensions: null) {
   $_filename: "#{$filename}.png";
   display: block;
-  @include image_dimensions($_filename, $dimensions);  
+  @include loft_images_dimensions($_filename, $dimensions);  
   background-repeat: no-repeat;
   background-position: center;  
-  @include retina_background($filename, 'png');
+  @include loft_images_retina_background($filename, 'png');
 }
 
 //
@@ -50,6 +50,6 @@
   $_filename: "#{$filename}.png";
   background: inline-image($_filename, "image/png") no-repeat center;
   display: block;
-  @include image_dimensions($_filename, $dimensions);
+  @include loft_images_dimensions($_filename, $dimensions);
   background-size: contain;
 }

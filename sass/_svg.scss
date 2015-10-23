@@ -24,9 +24,9 @@
 @mixin loft_images_svg_icon($filename, $fallback_ext: null, $dimensions: null) {
   $fallback_ext: $loft_images_svg_fallback_extension !default;
   $_fallback: "#{$filename}.#{$fallback_ext}";
-  @include svg_background($filename, 'center', $fallback_ext);
+  @include loft_images_svg_background($filename, 'center', $fallback_ext);
   display: block;
-  @include image_dimensions($_fallback, $dimensions);
+  @include loft_images_dimensions($_fallback, $dimensions);
   background-size: contain;
 }
 
@@ -55,7 +55,7 @@
 // 
 // @code
 //   html: <div class="icon"></div>
-//   sass: @include svg_background('icon', 'center', 20px, 20px);
+//   sass: @include loft_images_svg_background('icon', 'center', 20px, 20px);
 // @endcode
 // 
 // @depends Modernizr.svg
@@ -81,7 +81,7 @@
 //
 @mixin loft_images_svg_smart_background($filename, $bg_pos: 'center', $gap: 0, $fallback_ext: null) {
   $fallback_ext: $loft_images_svg_fallback_extension !default;
-  @include svg_background($filename, $bg_pos, $fallback_ext);
+  @include loft_images_svg_background($filename, $bg_pos, $fallback_ext);
   
   $_padding--v: null;
   $_padding--h: null;
