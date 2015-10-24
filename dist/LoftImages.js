@@ -1,5 +1,5 @@
 /**
- * Loft Images JavaScript Module v1.2.4
+ * Loft Images JavaScript Module v1.2.5
  * http://www.intheloftstudios.com/packages/js/loft_images
  *
  * Retina and SVG Handling by In the Loft Studios
@@ -7,7 +7,7 @@
  * Copyright 2015, Aaron Klump <sourcecode@intheloftstudios.com>
  * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Sat Oct 24 14:41:58 PDT 2015
+ * Date: Sat Oct 24 14:42:31 PDT 2015
  */
 /**
  * @code
@@ -71,7 +71,7 @@
 var LoftImages = (function ($, document) {
 
   function Images (settings) {
-    this.version = "1.2.4";
+    this.version = "1.2.5";
 
     // These are the options with default values.
     if (typeof settings === 'string') {
