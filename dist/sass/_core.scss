@@ -4,7 +4,7 @@
 // Will grow beyond native width of image unless you specify $full = false.
 // 
 @mixin loft_images_responsive_img($full: true) {
-  height: auto;
+  height: 100%;
   vertical-align: bottom;
   display: block;
   margin: auto;

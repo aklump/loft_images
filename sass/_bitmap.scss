@@ -10,10 +10,10 @@
 // 
 // @see $retina_suffix
 // 
-@mixin loft_images_retina_background($filename, $ext) {
+@mixin loft_images_retina_background($filename, $ext: png) {
   background-image: image_url($filename + '.' + $ext);
   background-size: contain;
-  @media #{$loft_images_retina} {
+  @media #{$loft_images_retina_media_query} {
       background-image: image_url($filename + $loft_images_retina_suffix + '.' + $ext);
   }  
 }
