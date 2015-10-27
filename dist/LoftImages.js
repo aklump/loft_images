@@ -2,14 +2,18 @@
  * Loft Images JavaScript Module v1.3
  * http://www.intheloftstudios.com/packages/js/loft_images
  *
- * Retina and SVG Handling by In the Loft Studios
+ * Front end Retina and SVG Handling for img tags or background images.
  *
  * Copyright 2015, Aaron Klump <sourcecode@intheloftstudios.com>
  * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Tue Oct 27 07:39:48 PDT 2015
+ * Date: Tue Oct 27 07:52:54 PDT 2015
  */
 /**
+ *
+ * USING DRUPAL? CHECK OUT THE BACKEND SOLUTION HERE:
+ * HTTPS://WWW.DRUPAL.ORG/PROJECT/AUTO_RETINA
+ * 
  * @code
  *   var images = new LoftImages();
  *

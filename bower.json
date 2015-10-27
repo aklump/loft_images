@@ -13,7 +13,7 @@
     "authors": [
         "Aaron Klump <sourcecode@intheloftstudios.com>"
     ],
-    "description": "Retina and SVG Handling by In the Loft Studios",
+    "description": "Front end Retina and SVG Handling for img tags or background images.",
     "dependencies": {
         "jquery": "~1.4.4"
     }

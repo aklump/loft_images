@@ -2,36 +2,33 @@
  * Loft Images JavaScript Module v1.3
  * http://www.intheloftstudios.com/packages/js/loft_images
  *
- * Retina and SVG Handling by In the Loft Studios
+ * Front end Retina and SVG Handling for img tags or background images.
  *
  * Copyright 2015, Aaron Klump <sourcecode@intheloftstudios.com>
  * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Tue Oct 27 07:39:48 PDT 2015
+ * Date: Tue Oct 27 07:52:54 PDT 2015
  */
 /**
  * @code
  *   var images = new LoftImages();
  *
- *   // You can skip this next step, which converts all DOM images, if you set 
- *   // autoProcessDom to true in the settings or modify the options
- *   // prototype.  But it means more work is done during instantiation.
- *   images.processDom();
- *
  *   // Here is the code as mentioned above
  *   var images = new LoftImages({autoProcessDom:true});
  *
- *   // or setting the prototype:
+ *   // To delay the dom processing on instantiation...
  *   $.extend(LoftImages.prototype.options, {
- *     autoProcessDom: true,
+ *     autoProcessDom: false,
  *   });
  *   ...
  *   var images = new LoftImages();
- *   
+ *   ...
+ *   images.processDom()
+ *
+ *   // To alter the retina suffix...
  *   var images2 = new LoftImages({
  *     retinaSuffix: "-2x"
  *   });
- *   images2.processDom();
  * @endcode
  *
  * It is also possible to use this class to find things out such as if retina

@@ -1,5 +1,5 @@
 name = "Loft Images"
-description = "Retina and SVG Handling by In the Loft Studios"
+description = "Front end Retina and SVG Handling for img tags or background images."
 version = "1.3"
 author = Aaron Klump <sourcecode@intheloftstudios.com>
 homepage = "http://www.intheloftstudios.com/packages/js/loft_images"
