@@ -53,3 +53,22 @@
   @include loft_images_dimensions($_filename, $dimensions);
   background-size: contain;
 }
+
+// 
+// 
+// Produce a png icon with retina version when needed.
+// 
+// Advantage: can use a retina version
+// Disadvantage: one extra request because the image can't be inline embedded.
+// 
+// @see retina_background
+// 
+@mixin loft_images_bitmap_icon($filename, $ext: 'gif', $dimensions: null) {
+  $_filename: "#{$filename}.#{$ext}";
+  display: block;
+  @include loft_images_dimensions($_filename, $dimensions);  
+  background-repeat: no-repeat;
+  background-position: center;  
+  background-image: image_url($_filename);
+  background-size: contain;
+}
