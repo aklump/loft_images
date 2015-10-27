@@ -13,3 +13,6 @@ For a production environment you may use:
 
     /bower_components/loft-images/*
     !/bower_components/loft-images/dist
+
+## Using Drupal?
+* Check out the backend solution here: <https://www.drupal.org/project/auto_retina>
