@@ -16,3 +16,11 @@ For a production environment you may use:
 
 ## Using Drupal?
 * Check out the backend solution here: <https://www.drupal.org/project/auto_retina>
+
+## SASS Integration
+There are two files you may embed, which provide some nice mixins.
+
+| filename | notes | snippet |
+|----------|----------|------|
+| \_loft\_images.scss | mixins are namespaced to avoid collision | @import "...dist/sass/loft_images" |
+| \_loft\_images\_shortnames.scss | shorter names, easier to remember; short names may collide with other mixins. | @import "...dist/sass/loft_images_shortnames" |

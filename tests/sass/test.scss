@@ -1,0 +1,88 @@
+@import "../../sass/loft_images_shortnames";
+// html {
+//   box-sizing: border-box;
+//   margin: 0;
+//   padding: 0;
+// }
+
+.group-icon__icon {
+  @include svg_icon('icon');
+}
+
+.group-background__span {
+  @include svg_bg('icon');
+}
+
+.group-background__span {
+  &.theme--center {
+    @include svg_smart_bg('icon', 'center center', 10px);
+  }
+  &.theme--left {
+    @include svg_smart_bg('icon', 'left center', 10px);
+  }
+  &.theme--right {
+    @include svg_smart_bg('icon', 'right', 10px);
+  }
+  &.theme--right-center {
+    @include svg_smart_bg('icon', 'right center', 10px);
+  }
+  &.theme--leftpx {
+    @include svg_smart_bg('icon', (10px, center), 10px);
+  }
+  &.theme--top {
+    @include svg_smart_bg('icon', 'center top', 10px);
+  }
+  &.theme--toppx {
+    @include svg_smart_bg('icon', (center, 10px), 10px);
+  }
+  &.theme--bottom {
+    @include svg_smart_bg('icon', 'center bottom', 10px);
+  }
+}
+
+.grandpa {
+  padding: 0;
+  margin: 0;
+  width: 400px;
+  &--aspect-ratio .father {
+    @include aspect_ratio(16, 9);
+  }
+  &--aspect-ratio-ratio .father {
+    @include aspect_ratio(.75);
+  }
+  &--aspect-ratio-child {
+    .father {
+      @include aspect_ratio(16, 9, null);
+    }
+    .baby3 {
+      @include fill_parent;
+      background-color: purple;
+    }
+  }
+  &--aspect-ratio-null {
+    .father {
+      @include aspect_ratio(16, 9, null);
+    }
+    .son {
+      @include fill_parent;
+    }
+  }
+}
+
+div.svg-scalable-icon {
+  @include loft_images_svg_scalable_icon('svg');
+}
+
+img.svg-scalable-icon {
+  @include fluid-img;
+}
+
+
+// div.icon--distorted {
+//   @include loft_images_svg_scalable_icon('svg', null, (50%, 50%));
+// }
+// img.icon--distorted {
+//   @include fluid-img;
+//   width: 50%;
+//   height: 50%;
+// }

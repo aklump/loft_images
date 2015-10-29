@@ -7,35 +7,28 @@
  * Copyright 2015, Aaron Klump <sourcecode@intheloftstudios.com>
  * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Tue Oct 27 07:52:54 PDT 2015
+ * Date: Thu Oct 29 14:37:14 PDT 2015
  */
 /**
- *
- * USING DRUPAL? CHECK OUT THE BACKEND SOLUTION HERE:
- * HTTPS://WWW.DRUPAL.ORG/PROJECT/AUTO_RETINA
- * 
  * @code
  *   var images = new LoftImages();
- *
- *   // You can skip this next step, which converts all DOM images, if you set 
- *   // autoProcessDom to true in the settings or modify the options
- *   // prototype.  But it means more work is done during instantiation.
- *   images.processDom();
  *
  *   // Here is the code as mentioned above
  *   var images = new LoftImages({autoProcessDom:true});
  *
- *   // or setting the prototype:
+ *   // To delay the dom processing on instantiation...
  *   $.extend(LoftImages.prototype.options, {
- *     autoProcessDom: true,
+ *     autoProcessDom: false,
  *   });
  *   ...
  *   var images = new LoftImages();
- *   
+ *   ...
+ *   images.processDom()
+ *
+ *   // To alter the retina suffix...
  *   var images2 = new LoftImages({
  *     retinaSuffix: "-2x"
  *   });
- *   images2.processDom();
  * @endcode
  *
  * It is also possible to use this class to find things out such as if retina

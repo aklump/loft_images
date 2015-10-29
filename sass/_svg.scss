@@ -22,12 +22,44 @@
 // @depends Modernizr.svg
 //
 @mixin loft_images_svg_icon($filename, $fallback_ext: null, $dimensions: null) {
-  $fallback_ext: $loft_images_svg_fallback_extension !default;
-  $_fallback: "#{$filename}.#{$fallback_ext}";
+  $_fallback: _loft_images_basename($filename, $fallback_ext);
   @include loft_images_svg_background($filename, 'center', $fallback_ext);
   display: block;
   @include loft_images_dimensions($_fallback, $dimensions);
   background-size: contain;
+}
+
+// 
+// Creates a scalable svg background image with fallback.
+// 
+// This has the benefit over an img tag  of allowing you to embed the image
+// data in your stylesheet as inline svg.
+// 
+// @param $filename string Must be in the compass images folder; do not include
+//   the extension.
+// @param $fallback_ext string Defines the extension for the fallback image.
+// 
+// Requires the following html structure:
+// @code
+//   <div class="icon"><span><span></span></span></div>
+//   
+//   .icon {
+//     loft_images_svg_scalable_icon('lion')
+//   }
+// @endcode
+// 
+@mixin loft_images_svg_scalable_icon($filename, $fallback_ext: null, $dimensions: null) {
+  $_image_path : _loft_images_basename($filename, $fallback_ext);
+  $_dimensions : _loft_image_dimensions($_image_path, $dimensions);
+  $_width      : nth($_dimensions, 1);
+  $_height     : nth($_dimensions, 2);
+  
+  width: 100%;
+  @include aspect-ratio($_width, $_height, '>span');
+  &>span>span {
+    @include loft_images_svg_icon($filename, $fallback_ext, (100%, 100%));
+    background-size: contain;
+  }
 }
 
 //
@@ -47,7 +79,7 @@
 // 
 // @param $filename string Must be in the compass images folder; do not include
 //   the extension.
-// @param $bg_pos string The background-position declaration.
+// @param $bg_pos string|list The background-position declaration.
 // @param string $fallback_ext Usually png; omit the dot.
 // 
 // Where icon.png and icon.svg exist in the images folder, and have the natural
@@ -64,9 +96,7 @@
   $fallback_ext: $loft_images_svg_fallback_extension !default;
   // Embeds our svg as a data uri to eliminate an http request.
   background-repeat: no-repeat;
-  @if $bg_pos {
-    background-position: #{$bg_pos};
-  }
+  @include loft_images_background_position($bg_pos);
   background-image: inline-image("#{$filename}.svg", "image/svg+xml");
   html.modernizr-no-svg & {
     // Will only load this if modernizr detects no svn support.
@@ -95,84 +125,8 @@
 //   }
 // @endcode
 //
-@mixin loft_images_svg_smart_background($filename, $bg_pos: center, $gap: 0, $fallback_ext: null) {
+@mixin loft_images_svg_smart_background($filename, $bg_pos: 'center', $gap: null, $fallback_ext: null) {
   $fallback_ext: $loft_images_svg_fallback_extension !default;
   @include loft_images_svg_background($filename, $bg_pos, $fallback_ext);
-  
-  $_padding--v: null;
-  $_padding--h: null;
-  $_pngFile: "#{$filename}.#{$fallback_ext}";
-  $_height: image_height($_pngFile);
-
-  // Try to make sense of a string.
-  @if type_of($bg_pos) == 'string' {
-    $_split: str-index($bg_pos, ' ');
-    @if $_split {
-      $bg_pos: (str-split($bg_pos, 0, $_split), str-split($bg_pos, $_split + 1));  
-    }
-    @else {
-      $bg_pos: ($bg_pos, $bg_pos, )
-    }
-  }
-
-  @if type_of($bg_pos) != 'list' {
-    @warn 'bg_pos argument should be a list, e.g., 10px bottom';
-  }
-
-  $_pos--h: nth($bg_pos, 1);
-  $_pos--v: nth($bg_pos, 2);
-  $_padding--h: ();
-  $_padding--v: ();
-
-  @if $_pos--h {
-    @if $_pos--h != 'center' {
-      $_padding--h: "left";
-    }
-    // @if $_pos--h == 'center' {
-    //   $_padding--h: "left" "right";
-    // }
-    @if $_pos--h == 'right' {
-      $_padding--h: "right";
-    }
-  }
-  @if $_pos--v {
-    @if $_pos--v != 'center' {
-      $_padding--v: "top";  
-    }
-    // @if $_pos--v == 'center' {
-    //   $_padding--v: "top" "bottom";
-    // }
-    @if $_pos--v == 'bottom' {
-      $_padding--v: "bottom";
-    }
-  }
-  
-  @if $_padding--h != null {
-    $_gap: $gap + $_pos--h;
-    $_width: image_width($_pngFile);
-    @each $_attr in $_padding--h {
-      @if unit($gap) == 'px' {
-        padding-#{$_attr}: $_width + $_gap;
-      }
-      @else {
-        padding-#{$_attr}: calc(${$_width} + #{$_gap});
-      }
-    }
-  }
-  @if $_padding--v != null {
-    $_gap: $gap + $_pos--v;
-    @each $_attr in $_padding--v {
-      @if unit($gap) == 'px' {
-        padding-#{$_attr}: $_height + $_gap;
-      }
-      @else {
-        padding-#{$_attr}: calc(${$_height} + #{$_gap});
-      }
-    }
-  }
-
-  @if $_padding--v == null {
-    line-height: $_height;
-  }    
-
+  @include loft_images_smart_background("#{$filename}.#{$fallback_ext}", $bg_pos, $gap);
 }

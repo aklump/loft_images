@@ -1,0 +1,59 @@
+//
+//
+// @file
+// Include this file if short names do not conflict with 
+//
+@import "loft_images";
+
+//
+//
+// Core handlers
+//
+@mixin fluid_img($full: true) {
+  @include loft_images_responsive_img($full);
+}
+
+@mixin aspect_ratio($x, $y: null, $inner: ">div") {
+  @include loft_images_aspect_ratio($x, $y, $inner);
+}
+
+@mixin fill_parent() {
+  @include loft_images_fill_parent;
+}
+
+//
+//
+// SVG mixins
+//
+@mixin svg_icon($filename, $fallback_ext: null, $dimensions: null) {
+  @include loft_images_svg_icon($filename, $fallback_ext, $dimensions);
+}
+
+@mixin svg_scalable_icon($filename, $fallback_ext: null, $dimensions: null) {
+  @include loft_images_svg_scalable_icon($filename, $fallback_ext, $dimensions);
+}
+
+@mixin svg_smart_bg($filename, $bg_pos: center, $gap: 0, $fallback_ext: null) {
+  @include loft_images_svg_smart_background($filename, $bg_pos, $gap, $fallback_ext);
+}
+
+@mixin svg_bg($filename, $bg_pos: center, $fallback_ext: null) {
+  @include loft_images_svg_background($filename, $bg_pos, $fallback_ext);
+}
+
+//
+//
+// Retina mixins
+//
+@mixin retina_icon($filename, $ext: png, $dimensions: null) {
+  @include loft_images_png_retina_icon($filename, $ext, $dimensions);
+}
+
+@mixin retina_bg($filename, $ext: png) {
+  @include loft_images_retina_background($filename, $ext);
+}
+
+//
+//
+// Bitmap (non-retina) mixins
+//

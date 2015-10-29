@@ -1,0 +1,8 @@
+//
+// @file
+// 
+// Legacy mixin support
+//
+@mixin loft_images_responsive_img($full: true) {
+  @include loft_images_fluid_img($full);
+}

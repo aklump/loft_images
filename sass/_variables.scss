@@ -3,7 +3,7 @@
 //
 // @see LoftImages.js This should match Images.protoype.options.retinaMediaQuery
 //
-$loft_images_retina_media_query: "(-webkit-min-device-pixel-ratio: 2), (-o-min-device-pixel-ratio: 3/2), (min--moz-device-pixel-ratio: 2), (min-device-pixel-ratio: 2), (min-resolution: 144dppx)";
+$loft_images_retina_media_query: "(-webkit-min-device-pixel-ratio: 2), (-o-min-device-pixel-ratio: 3/2), (min--moz-device-pixel-ratio: 2), (min-device-pixel-ratio: 2), (min-resolution: 144dppx)" !default;
 
 //
 // Sets the default suffix to be used for retina stuff.  Some convention
@@ -16,4 +16,17 @@ $loft_images_retina_media_query: "(-webkit-min-device-pixel-ratio: 2), (-o-min-d
 // 
 $loft_images_retina_suffix: '-2x' !default;
 
-$loft_images_svg_fallback_extension: "png";
+$loft_images_svg_fallback_extension: "png" !default;
+
+//
+// A selector to use when svg support is not present, e.g. html.no-svg
+//
+$loft_images_selector_svg_not_supported: 'html.modernizr-no-svgasimg' !default;
+
+//
+//
+// The default position directive to apply to hover_overlay mixin(s).
+//
+$loft_images_hover_overlay_position_default: 'relative' !default;
+$loft_images_hover_overlay_speed_default: 0.3s !default;
+$loft_images_hover_overlay_color_default: #fff !default;

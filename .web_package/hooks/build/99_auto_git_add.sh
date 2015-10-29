@@ -1,0 +1,1 @@
+(cd $7/dist && git add .)

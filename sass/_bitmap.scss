@@ -28,14 +28,31 @@
 // 
 // @see retina_background
 // 
-@mixin loft_images_png_retina_icon($filename, $dimensions: null) {
-  $_filename: "#{$filename}.png";
+@mixin loft_images_retina_icon($filename, $ext: png, $dimensions: null) {
+  // $_filename: "#{$filename}.#{ext}";
+  $_filename: _loft_images_basename($filename, $ext);
+
   display: block;
   @include loft_images_dimensions($_filename, $dimensions);  
   background-repeat: no-repeat;
   background-position: center;  
-  @include loft_images_retina_background($filename, 'png');
+  @include loft_images_retina_background($filename, $ext);
 }
+
+// @mixin loft_images_retina_scalable_icon($filename, $ext: png, $dimensions: null) {
+//   $_image_path : _loft_images_basename($filename, $ext);
+//   $_dimensions: _loft_image_dimensions($_image_path, $dimensions);
+//   @debug $_dimensions;
+//   $_width      : nth($_dimensions, 1);
+//   $_height     : nth($_dimensions, 2);
+  
+//   width: 100%;
+//   @include aspect-ratio($_width, $_height, '>span');
+//   &>span>span {
+//     @include loft_images_retina_icon($filename, $ext, (100%, 100%));
+//     background-size: contain;
+//   }
+// }
 
 //
 //

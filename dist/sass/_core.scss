@@ -3,7 +3,7 @@
 // 
 // Will grow beyond native width of image unless you specify $full = false.
 // 
-@mixin loft_images_responsive_img($full: true) {
+@mixin loft_images_fluid_img($full: true) {
   height: 100%;
   vertical-align: bottom;
   display: block;
@@ -22,56 +22,90 @@
 //
 // Applies width and height to an image, defaulting to the native dimensions.
 //
-@mixin loft_images_dimensions($filename, $dimensions: null) {
-  @if length($dimensions) == 2 {
-    width: nth($dimensions, 1);
-    height: nth($dimensions, 2);
-  }
-  @else {  
-    width: image-width($filename);
-    height: image-height($filename);
-  }
+@mixin loft_images_dimensions($image_path, $dimensions: null) {
+  $_dimensions: _loft_image_dimensions($image_path, $dimensions);
+  width: nth($_dimensions, 1);
+  height: nth($_dimensions, 2);  
 }
 
 //
-// Apply height/width to an element to maintain an aspect ratio.
+// Returns the natural image dimensions of a file or passthru.
 // 
+// @param string $image_path Includes the extension.
+// @param list $dimensions Expecting 2 values w, h or null.
+//
+@function _loft_image_dimensions($image_path, $dimensions: null) {
+  @if length($dimensions) == 2 {
+    @return $dimensions;
+  }
+
+  @return (image-width($image_path), image-height($image_path));
+}
+
+//
+// Apply height/width to an element to maintain an aspect ratio of a child.
+// 
+// @param number $x May be a ratio like .65 or the x value of a ratio, e.g. 4
+// @param number $y Optional Use if passing a ratio as two numbers; the y value.
+// @param string $selector Use to target the inner element; this will be written
+//   as the parent plus this selector so it may be too specific.  You can also
+//   send null and use loft_images_fill_parent() mixin instead.
+//
 // @code 
-//   <div class="parent"><div></div></div>
+//   <div class="wrapper"><div class="content"></div></div>
 // 
-//   .parent {
+//   .wrapper {
 //     @include aspect_ratio(4, 3);
 //   }
 // @endcode
 // 
-// @param number $x May be a ratio like .65 or the x value of a ratio, e.g. 4
-// @param number $y Optional Use if passing a ratio as two numbers; the y value.
-// @param string $selector Use to target the inner element.
-//
+// In the above example, .wrapper will be given 100% width.  .wrapper>div will
+// be positioned inside of .wrapper and will have a width and height that
+// maintains the aspect ratio as the width of .wrapper changes.
+// 
+// Be aware that you can apply this to nested grandchildren, as in this
+// example: 
+// 
+// @code
+//   <div class="shape">
+//     <a href="" class="image-wrapper">
+//       <img class="image" src="fish.jpg" alt="A fish"/>
+//     </a>
+//   </div>
+//   
+//   .shape {
+//     @include aspect_ratio(16, 9, '>a, .image');
+//   }
+// @endcode
+// 
 @mixin loft_images_aspect_ratio($x, $y: null, $inner: ">div") {
   $ratio: $x;
   @if $y {
-    $ratio: $y / $x;  
+    $ratio: $y / $x;
   }
   width: 100%;
   position: relative;
   height: 0;
   padding: $ratio * 100% 0 0 0;
   overflow: hidden;
-  #{$inner} {
-    @include loft_images_aspect_ratio_inner; 
+  @if $inner {
+    #{$inner} {
+      @include loft_images_fill_parent; 
+    }
   }
 }
 
 //
 //
-// Helper to 'loft_images_aspect_ratio', if .inner is not a direct child or is called
-// something other than .inner
+// Absolutely postions element to fill its parent container matching
+// height and width.
 //
-@mixin loft_images_aspect_ratio_inner() {
+@mixin loft_images_fill_parent() {
   position: absolute;
   display: block;
   top: 0;
+  right: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -80,13 +114,20 @@
 @mixin loft_images_un_aspect_ratio_inner() {
   position: initial;
   display: initial;
-  top: initial;
-  left: initial;
-  width: initial;
-  height: initial;
+  top: auto;
+  left: auto;
+  width: auto;
+  height: auto;
 }
 
 //
+// Create an overlay div as a child of parent.
+// 
+// @param float $opacity 0-1
+// @param string $position One of:
+//   - relative, absolute, null, etc...
+// @param float $speed As used in a transition duration directive.
+// @param hex $color Of the overlay.
 //
 // Usage:
 //   &.is-not-hover &__image-overlay {
@@ -96,15 +137,134 @@
 //     @include loft_images_hover_overlay(.16);
 //   } 
 //
-@mixin loft_images_hover_overlay($opacity, $speed: .3s, $color: #fff) {
-  position: relative;
+@mixin loft_images_hover_overlay($opacity, $position: $loft_images_hover_overlay_position_default, $speed: $loft_images_hover_overlay_speed_default, $color: $loft_images_hover_overlay_color_default) {
+  @if $position {
+    position: $position;
+  }
   &:after {
     content: "";
-    @include loft_images_aspect_ratio_inner;
+    @include loft_images_fill_parent;
     background-color: $color;
     @include opacity($opacity);
     @if $speed {
-      @include transition-duration($speed);  
+      @include transition-duration($speed);
     }
   }
 }
+
+
+@mixin loft_images_smart_background($filename, $bg_pos, $gap: 0) {
+  $_padding--v: null;
+  $_padding--h: null;
+  $_height: image_height($filename);
+
+  // Try to make sense of a string.
+  @if type_of($bg_pos) == 'string' {
+    $_split: str-index($bg_pos, ' ');
+    @if $_split {
+      $bg_pos: (str-slice($bg_pos, 0, $_split - 1), str-slice($bg_pos, $_split + 1));
+    }
+    @else {
+      $bg_pos: ($bg_pos, 'center');
+    }
+  }
+
+  @if type_of($bg_pos) != 'list' {
+    @warn 'bg_pos argument should be a list, e.g., 10px bottom';
+  }
+  $_pos--h: nth($bg_pos, 1);
+  $_pos--v: nth($bg_pos, 2);
+  $_padding--h: ();
+  $_padding--v: ();
+
+  @if $_pos--h {
+    @if $_pos--h != 'center' {
+      $_padding--h: "left";
+    }
+    // @if $_pos--h == 'center' {
+    //   $_padding--h: "left" "right";
+    // }
+    @if $_pos--h == 'right' {
+      $_padding--h: "right";
+      $_pos--h: 0;
+    }
+    @elseif $_pos--h == 'left' {
+      $_pos--h: 0; 
+    }
+  }
+  @if $_pos--v {
+    @if $_pos--v != 'center' {
+      $_padding--v: "top";
+    }
+    @if $_pos--v == 'bottom' {
+      $_padding--v: "bottom";
+      $_pos--v: 0;
+    }
+    @elseif $_pos--v == 'top' {
+      $_pos--v: 0;
+    }
+  }
+
+  
+  @if $_padding--h != null {
+    $_gap: $gap + $_pos--h;
+    $_width: image_width($filename);
+    @each $_attr in $_padding--h {
+      @if $gap == 0 or unit($gap) == 'px' {
+        padding-#{$_attr}: $_width + $_gap;
+      }
+      @else {
+        padding-#{$_attr}: calc(${$_width} + #{$_gap});
+      }
+    }
+  }
+
+  
+
+  @if $_padding--v != null {
+    $_gap: $gap + $_pos--v;
+
+    @each $_attr in $_padding--v {
+      @if $gap == 0 or unit($gap) == 'px' {
+        padding-#{$_attr}: $_height + $_gap;
+      }
+      @else {
+        padding-#{$_attr}: calc(${$_height} + #{$_gap});
+      }
+    }
+  }
+
+  @if $_padding--v == null {
+    line-height: $_height;
+  }
+}
+
+@mixin loft_images_background_position($position) {
+  @if $position {
+    @if typeof $position == 'list' {
+      $position: loft_images_implode($position, ' ');
+    }
+    background-position: unquote($position);
+  }
+}
+
+@function loft_images_implode($list, $glue: '', $is_nested: false) {
+  $result: null;
+  @for $i from 1 through length($list) {
+    $e: nth($list, $i);
+    @if type-of($e) == list {
+      $result: $result#{loft_images_implode($e, $glue, true)};
+    }
+    @else {
+      $result: if($i != length($list) or $is_nested, $result#{$e}#{$glue}, $result#{$e});
+    }
+  }
+
+  @return $result;
+}
+
+@function _loft_images_basename($filename, $fallback_ext: null) {
+  $fallback_ext: $loft_images_svg_fallback_extension !default;
+  @return "#{$filename}.#{$fallback_ext}";  
+}
+

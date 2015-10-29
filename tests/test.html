@@ -4,12 +4,14 @@
   <meta charset="utf-8">
   <title>QUnit Tests for LoftImages</title>
   <link rel="stylesheet" href="qunit.css">
+  <link rel="stylesheet" href="test.css">
 </head>
 <body>
   <div id="qunit"></div>
   <div id="qunit-fixture"></div>
 
   <div id="template">
+    <h2>Bitmap tests with Retina fallbacks</h2>
     <div class="group-1">
       <img class="retina-1" style="width:600px" data-no-retina-src="images/bitmap.jpg" alt="A zebra" />
       <img class="svg-1" style="width:600px" data-no-svg-src="images/svg.png" alt="A lion" />
@@ -17,6 +19,27 @@
     <div class="group-2">
       <img class="retina-2" style="width:600px" data-no-retina-src="images/bitmap.jpg" alt="A zebra" />
       <img class="svg-2" style="width:600px" data-no-svg-src="images/svg.png" alt="A lion" />
+    </div>
+
+    <h2>Embedded SVG tests</h2>
+    <div class="group-icon">
+      <span class="group-icon__icon"></span>
+    </div>
+    <div class="group-background">
+      <span class="group-background__span">Some text</span>
+    </div>
+
+
+
+    <h2>Generic nested divs</h2>
+    <div class="grandpa">
+      <div class="father">
+        <div class="son">
+          <div class="baby1"></div>
+          <div class="baby2"></div>
+          <div class="baby3"></div>
+        </div>
+      </div>
     </div>
   </div>
   
