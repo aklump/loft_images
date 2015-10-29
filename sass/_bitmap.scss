@@ -41,7 +41,7 @@
 
 // @mixin loft_images_retina_scalable_icon($filename, $ext: png, $dimensions: null) {
 //   $_image_path : _loft_images_basename($filename, $ext);
-//   $_dimensions: _loft_image_dimensions($_image_path, $dimensions);
+//   $_dimensions: _loft_images_dimensions($_image_path, $dimensions);
 //   @debug $_dimensions;
 //   $_width      : nth($_dimensions, 1);
 //   $_height     : nth($_dimensions, 2);
