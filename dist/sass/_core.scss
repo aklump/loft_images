@@ -23,7 +23,7 @@
 // Applies width and height to an image, defaulting to the native dimensions.
 //
 @mixin loft_images_dimensions($image_path, $dimensions: null) {
-  $_dimensions: _loft_image_dimensions($image_path, $dimensions);
+  $_dimensions: _loft_images_dimensions($image_path, $dimensions);
   width: nth($_dimensions, 1);
   height: nth($_dimensions, 2);  
 }
@@ -34,7 +34,7 @@
 // @param string $image_path Includes the extension.
 // @param list $dimensions Expecting 2 values w, h or null.
 //
-@function _loft_image_dimensions($image_path, $dimensions: null) {
+@function _loft_images_dimensions($image_path, $dimensions: null) {
   @if length($dimensions) == 2 {
     @return $dimensions;
   }
