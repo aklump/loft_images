@@ -6,3 +6,9 @@
 @mixin loft_images_responsive_img($full: true) {
   @include loft_images_fluid_img($full);
 }
+@mixin loft_images_aspect_ratio_inner() {
+  @include loft_images_fill_parent;
+}
+@mixin loft_images_png_retina_icon($filename) {
+  @include loft_images_retina_icon($filename, 'png');
+}
