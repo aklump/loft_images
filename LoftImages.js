@@ -7,7 +7,7 @@
  * Copyright 2015, Aaron Klump <sourcecode@intheloftstudios.com>
  * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Thu Oct 29 16:09:14 PDT 2015
+ * Date: Sat Nov 14 05:55:23 PST 2015
  */
 /**
  * @code
@@ -232,10 +232,10 @@ var LoftImages = (function ($, document) {
   Images.prototype.processSvgImage = function (image) {
     image = image instanceof jQuery ? image : $(image);
     var imagePath = image.data(this.settings.dataSvgAttribute);
-
+    var parts;
+    
     if (imagePath) {
-      if (this.svg) {
-        var parts = imagePath.match(/(.+)(\..+$)/);
+      if (this.svg && (parts = imagePath.match(/(.+)(\..+$)/))) {
         imagePath = parts[1] + '.svg';
       }
       this.applySource(image, imagePath);
@@ -258,10 +258,10 @@ var LoftImages = (function ($, document) {
   Images.prototype.processRetinaImage = function (image) {
     image = image instanceof jQuery ? image : $(image);
     var imagePath = image.data(this.settings.dataRetinaAttribute);
+    var parts;
 
     if (imagePath) {
-      if (this.retina) {
-        var parts = imagePath.match(/(.+)(\..+$)/);
+      if (this.retina && (parts = imagePath.match(/(.+)(\..+$)/))) {
         imagePath = parts[1] + this.settings.retinaSuffix + parts[2];
       }
       this.applySource(image, imagePath);
