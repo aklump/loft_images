@@ -139,7 +139,7 @@
 //
 @mixin loft_images_hover_overlay($opacity, $position: $loft_images_hover_overlay_position_default, $speed: $loft_images_hover_overlay_speed_default, $color: $loft_images_hover_overlay_color_default) {
   @if $position {
-    position: $position;
+    position: unquote($position);
   }
   &:after {
     content: "";
