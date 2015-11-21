@@ -3,7 +3,7 @@
 // 
 // Will grow beyond native width of image unless you specify $full = false.
 // 
-@mixin loft_images_fluid_img($full: true) {
+@mixin loft-images-fluid-img($full: true) {
   height: 100%;
   vertical-align: bottom;
   display: block;
@@ -19,11 +19,24 @@
 }
 
 //
+// Applies CSS to make the background image work like and img tag
+// 
+// @param string $size Defaults to 'cover'.  The background size value.
+// 
+//
+@mixin loft-images-image-background($size: cover) {
+  @include fill-parent;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: unquote($size);
+}
+
+//
 //
 // Applies width and height to an image, defaulting to the native dimensions.
 //
-@mixin loft_images_dimensions($image_path, $dimensions: null) {
-  $_dimensions: _loft_images_dimensions($image_path, $dimensions);
+@mixin loft-images-dimensions($image_path, $dimensions: null) {
+  $_dimensions: _loft-images-dimensions($image_path, $dimensions);
   width: nth($_dimensions, 1);
   height: nth($_dimensions, 2);  
 }
@@ -34,7 +47,7 @@
 // @param string $image_path Includes the extension.
 // @param list $dimensions Expecting 2 values w, h or null.
 //
-@function _loft_images_dimensions($image_path, $dimensions: null) {
+@function _loft-images-dimensions($image_path, $dimensions: null) {
   @if length($dimensions) == 2 {
     @return $dimensions;
   }
@@ -49,13 +62,13 @@
 // @param number $y Optional Use if passing a ratio as two numbers; the y value.
 // @param string $selector Use to target the inner element; this will be written
 //   as the parent plus this selector so it may be too specific.  You can also
-//   send null and use loft_images_fill_parent() mixin instead.
+//   send null and use loft-images-fill-parent() mixin instead.
 //
 // @code 
 //   <div class="wrapper"><div class="content"></div></div>
 // 
 //   .wrapper {
-//     @include aspect_ratio(4, 3);
+//     @include aspect-ratio(4, 3);
 //   }
 // @endcode
 // 
@@ -74,11 +87,11 @@
 //   </div>
 //   
 //   .shape {
-//     @include aspect_ratio(16, 9, '>a, .image');
+//     @include aspect-ratio(16, 9, '>a, .image');
 //   }
 // @endcode
 // 
-@mixin loft_images_aspect_ratio($x, $y: null, $inner: ">div") {
+@mixin loft-images-aspect-ratio($x, $y: null, $inner: ">div") {
   $ratio: $x;
   @if $y {
     $ratio: $y / $x;
@@ -90,7 +103,7 @@
   overflow: hidden;
   @if $inner {
     #{$inner} {
-      @include loft_images_fill_parent; 
+      @include loft-images-fill-parent; 
     }
   }
 }
@@ -100,7 +113,7 @@
 // Absolutely postions element to fill its parent container matching
 // height and width.
 //
-@mixin loft_images_fill_parent() {
+@mixin loft-images-fill-parent() {
   position: absolute;
   display: block;
   top: 0;
@@ -111,7 +124,7 @@
   height: 100%;
 }
 
-@mixin loft_images_un_aspect_ratio_inner() {
+@mixin loft-images-un-aspect-ratio_inner() {
   position: initial;
   display: initial;
   top: auto;
@@ -131,19 +144,21 @@
 //
 // Usage:
 //   &.is-not-hover &__image-overlay {
-//     @include loft_images_hover_overlay(0);
+//     @include loft-images-hover_overlay(0);
 //   }
 //   &.is-hover &__image-overlay {
-//     @include loft_images_hover_overlay(.16);
+//     @include loft-images-hover_overlay(.16);
 //   } 
 //
-@mixin loft_images_hover_overlay($opacity, $position: $loft_images_hover_overlay_position_default, $speed: $loft_images_hover_overlay_speed_default, $color: $loft_images_hover_overlay_color_default) {
-  @if $position {
+@mixin loft-images-hover_overlay($opacity, $position: $loft-images-hover_overlay_position_default, $speed: $loft-images-hover_overlay_speed_default, $color: $loft-images-hover_overlay_color_default) {
+  
+  @if type-of($position) == 'string' {
     position: unquote($position);
   }
+
   &:after {
     content: "";
-    @include loft_images_fill_parent;
+    @include loft-images-fill-parent;
     background-color: $color;
     @include opacity($opacity);
     @if $speed {
@@ -153,13 +168,13 @@
 }
 
 
-@mixin loft_images_smart_background($filename, $bg_pos, $gap: 0) {
+@mixin loft-images-smart-background($filename, $bg_pos, $gap: 0) {
   $_padding--v: null;
   $_padding--h: null;
-  $_height: image_height($filename);
+  $_height: image-height($filename);
 
   // Try to make sense of a string.
-  @if type_of($bg_pos) == 'string' {
+  @if type-of($bg_pos) == 'string' {
     $_split: str-index($bg_pos, ' ');
     @if $_split {
       $bg_pos: (str-slice($bg_pos, 0, $_split - 1), str-slice($bg_pos, $_split + 1));
@@ -169,7 +184,7 @@
     }
   }
 
-  @if type_of($bg_pos) != 'list' {
+  @if type-of($bg_pos) != 'list' {
     @warn 'bg_pos argument should be a list, e.g., 10px bottom';
   }
   $_pos--h: nth($bg_pos, 1);
@@ -239,21 +254,21 @@
   }
 }
 
-@mixin loft_images_background_position($position) {
+@mixin loft-images-background-position($position) {
   @if $position {
     @if typeof $position == 'list' {
-      $position: loft_images_implode($position, ' ');
+      $position: loft-images-implode($position, ' ');
     }
     background-position: unquote($position);
   }
 }
 
-@function loft_images_implode($list, $glue: '', $is_nested: false) {
+@function loft-images-implode($list, $glue: '', $is_nested: false) {
   $result: null;
   @for $i from 1 through length($list) {
     $e: nth($list, $i);
     @if type-of($e) == list {
-      $result: $result#{loft_images_implode($e, $glue, true)};
+      $result: $result#{loft-images-implode($e, $glue, true)};
     }
     @else {
       $result: if($i != length($list) or $is_nested, $result#{$e}#{$glue}, $result#{$e});
@@ -263,8 +278,8 @@
   @return $result;
 }
 
-@function _loft_images_basename($filename, $fallback_ext: null) {
-  $fallback_ext: $loft_images_svg_fallback_extension !default;
+@function _loft-images-basename($filename, $fallback_ext: null) {
+  $fallback_ext: $loft-images-svg_fallback_extension !default;
   @return "#{$filename}.#{$fallback_ext}";  
 }
 
