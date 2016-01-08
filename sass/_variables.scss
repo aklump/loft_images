@@ -19,9 +19,14 @@ $loft_images_retina_suffix: '-2x' !default;
 $loft_images_svg_fallback_extension: "png" !default;
 
 //
+// Modernizr prefix that us used for the modernizr classes
+//
+$loft_images_modernizr_prefix: 'modernizr-' !default;
+
+//
 // A selector to use when svg support is not present, e.g. html.no-svg
 //
-$loft_images_selector_svg_not_supported: 'html.modernizr-no-svgasimg' !default;
+$loft_images_selector_svg_not_supported: 'html.#{$loft_images_modernizr_prefix}no-svgasimg' !default;
 
 //
 //

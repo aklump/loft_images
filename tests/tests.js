@@ -15,7 +15,7 @@ QUnit.begin(function () {
   QUnit.storage.prototype = $.extend({}, LoftImages.prototype);
   QUnit.storage.$template = $('#template').clone();
   $('#template').replaceWith(QUnit.storage.$template.clone().attr('id', 'test'));
-  QUnit.storage.inlineSvgControl = 'url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+aWNvbjwvdGl0bGU+PGNpcmNsZSBjeD0iMzcyIiBjeT0iMTY5IiByPSIxMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM2MCAtMTU3KSIgZmlsbD0iIzQ5OTBFMiIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+)';
+  QUnit.storage.inlineSvgControl = 'url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+aWNvbjwvdGl0bGU+PGNpcmNsZSBjeD0iMzcyIiBjeT0iMTY5IiByPSIxMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM2MCAtMTU3KSIgZmlsbD0iIzQ5OTBFMiIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+")';
 });
 
 QUnit.done(function () {

@@ -4,10 +4,10 @@
  *
  * Front end Retina and SVG Handling for img tags or background images.
  *
- * Copyright 2015, Aaron Klump <sourcecode@intheloftstudios.com>
+ * Copyright 2015-2016, Aaron Klump <sourcecode@intheloftstudios.com>
  * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Fri Nov 20 16:17:08 PST 2015
+ * Date: Fri Jan  8 13:49:26 PST 2016
  */
 /**
  * @code
