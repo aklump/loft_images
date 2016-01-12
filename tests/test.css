@@ -173,5 +173,5 @@ img.svg-scalable-icon {
   vertical-align: bottom;
   display: block;
   margin: auto;
-  max-width: auto;
+  max-width: none;
   width: 100%; }

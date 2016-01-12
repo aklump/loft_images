@@ -9,7 +9,7 @@
   display: block;
   margin: auto;
   @if $full == true {
-    max-width: auto;
+    max-width: none;
     width: 100%;
   }
   @else {
