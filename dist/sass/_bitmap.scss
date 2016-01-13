@@ -14,11 +14,12 @@
   background-image: image_url($filename + '.' + $ext);
   background-size: contain;
   @media #{$loft_images_retina_media_query} {
-    background-image: image_url($filename + $loft_images_retina_suffix + '.' + $ext);
-  }
+      background-image: image_url($filename + $loft_images_retina_suffix + '.' + $ext);
+  }  
 }
 
-//
+
+// 
 // 
 // Produce a png icon with retina version when needed.
 // 
@@ -32,9 +33,9 @@
   $_filename: _loft_images_basename($filename, $ext);
 
   display: block;
-  @include loft_images_dimensions($_filename, $dimensions);
+  @include loft_images_dimensions($_filename, $dimensions);  
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center;  
   @include loft_images_retina_background($filename, $ext);
 }
 
@@ -44,7 +45,7 @@
 //   @debug $_dimensions;
 //   $_width      : nth($_dimensions, 1);
 //   $_height     : nth($_dimensions, 2);
-
+  
 //   width: 100%;
 //   @include aspect-ratio($_width, $_height, '>span');
 //   &>span>span {
@@ -63,21 +64,28 @@
 // @see svg_icon
 //
 @mixin loft_images_png_icon($filename, $dimensions: null) {
-  @include loft_images_bitmap_icon($filename, 'png', $dimensions);
+  $_filename: "#{$filename}.png";
+  background: inline-image($_filename, "image/png") no-repeat center;
+  display: block;
+  @include loft_images_dimensions($_filename, $dimensions);
+  background-size: contain;
 }
 
 // 
 // 
-// Using bitmap image, apply it's dimensions to the selector and use it as the background, embedding the image in the stylesheet.
+// Produce a png icon with retina version when needed.
 // 
-// Advantage: embedded in stylesheet, no extra connection.
+// Advantage: can use a retina version
+// Disadvantage: one extra request because the image can't be inline embedded.
 // 
 // @see retina_background
 // 
 @mixin loft_images_bitmap_icon($filename, $ext: 'gif', $dimensions: null) {
   $_filename: "#{$filename}.#{$ext}";
-  background: inline-image($_filename, "image/#{$ext}") no-repeat center;
   display: block;
-  @include loft_images_dimensions($_filename, $dimensions);
+  @include loft_images_dimensions($_filename, $dimensions);  
+  background-repeat: no-repeat;
+  background-position: center;  
+  background-image: image_url($_filename);
   background-size: contain;
 }
