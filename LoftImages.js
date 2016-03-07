@@ -7,7 +7,7 @@
  * Copyright 2015-2016, Aaron Klump <sourcecode@intheloftstudios.com>
  * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Wed Jan 13 13:20:30 PST 2016
+ * Date: Mon Mar  7 15:05:16 PST 2016
  */
 /**
  * @code
@@ -240,9 +240,6 @@ var LoftImages = (function ($, document) {
       }
       this.applySource(image, imagePath);
     }
-    else {
-      throw "Cannot determine svg image path.";
-    }
     decrementPending(this);
     
     return this;
@@ -265,9 +262,6 @@ var LoftImages = (function ($, document) {
         imagePath = parts[1] + this.settings.retinaSuffix + parts[2];
       }
       this.applySource(image, imagePath);
-    }
-    else {
-      throw "Cannot determine retina image path.";
     }
 
     decrementPending(this);
