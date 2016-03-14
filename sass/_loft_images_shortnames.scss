@@ -21,8 +21,8 @@
   @include loft-images-aspect_ratio($x, $y, $inner);
 }
 
-@mixin fill-parent() {
-  @include loft-images-fill_parent;
+@mixin fill-parent($position: absolute) {
+  @include loft-images-fill_parent($position);
 }
 
 //

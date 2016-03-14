@@ -110,11 +110,13 @@
 
 //
 //
-// Absolutely postions element to fill its parent container matching
+// Positions element to completely fill its parent container matching
 // height and width.
 //
-@mixin loft-images-fill-parent() {
-  position: absolute;
+// @param string $position Default to absolute.
+//
+@mixin loft-images-fill-parent($position: absolute) {
+  position: $position;
   display: block;
   top: 0;
   right: 0;
