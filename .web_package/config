@@ -8,3 +8,4 @@ push_master = auto
 push_develop = no
 patch_prefix = .
 pause = 5
+info_file = web_package.yml
