@@ -119,7 +119,7 @@ QUnit.test("Assert SASS smart_bg() theme--toppx works.", function(assert) {
   assert.strictEqual($icon.css('backgroundSize'), 'auto');
   assert.strictEqual($icon.css('display'), 'inline');
   assert.strictEqual($icon.css('margin'), '0px');
-  assert.strictEqual($icon.css('paddingTop'), '44px');
+  assert.strictEqual($icon.css('paddingTop'), '54px');
   assert.strictEqual($icon.css('paddingRight'), '0px');
   assert.strictEqual($icon.css('paddingBottom'), '0px');
   assert.strictEqual($icon.css('paddingLeft'), '0px');
@@ -143,6 +143,27 @@ QUnit.test("Assert SASS smart_bg() theme--bottom works.", function(assert) {
   assert.strictEqual($icon.css('paddingLeft'), '0px');
 });
 
+
+
+QUnit.test("Assert SASS smart_bg() theme--bottompx works.", function(assert) {
+  var $icon = $('.group-background__span');
+
+  $icon.addClass('theme--bottompx');
+  assert.notStrictEqual($icon.height(), 24);
+  assert.notStrictEqual($icon.width(), 24);
+  assert.strictEqual($icon.css('backgroundImage'), QUnit.storage.inlineSvgControl);
+  assert.strictEqual($icon.css('backgroundRepeat'), 'no-repeat');
+  assert.strictEqual($icon.css('backgroundPosition'), '50% bottom 10px');
+  assert.strictEqual($icon.css('backgroundSize'), 'auto');
+  assert.strictEqual($icon.css('display'), 'inline');
+  assert.strictEqual($icon.css('margin'), '0px');
+  assert.strictEqual($icon.css('paddingTop'), '0px');
+  assert.strictEqual($icon.css('paddingLeft'), '0px');
+  assert.strictEqual($icon.css('paddingBottom'), '54px');
+  assert.strictEqual($icon.css('paddingRight'), '0px');
+});
+
+
 QUnit.test("Assert SASS smart_bg() theme--top works.", function(assert) {
   var $icon = $('.group-background__span');
 
@@ -161,7 +182,6 @@ QUnit.test("Assert SASS smart_bg() theme--top works.", function(assert) {
   assert.strictEqual($icon.css('paddingLeft'), '0px');
 });
 
-
 QUnit.test("Assert SASS smart_bg() theme--leftpx works.", function(assert) {
   var $icon = $('.group-background__span');
 
@@ -177,8 +197,25 @@ QUnit.test("Assert SASS smart_bg() theme--leftpx works.", function(assert) {
   assert.strictEqual($icon.css('paddingTop'), '0px');
   assert.strictEqual($icon.css('paddingRight'), '0px');
   assert.strictEqual($icon.css('paddingBottom'), '0px');
-  assert.strictEqual($icon.css('paddingLeft'), '44px');
-  
+  assert.strictEqual($icon.css('paddingLeft'), '54px');
+});
+
+QUnit.test("Assert SASS smart_bg() theme--rightpx works.", function(assert) {
+  var $icon = $('.group-background__span');
+
+  $icon.addClass('theme--rightpx');
+  assert.notStrictEqual($icon.height(), 24);
+  assert.notStrictEqual($icon.width(), 24);
+  assert.strictEqual($icon.css('backgroundImage'), QUnit.storage.inlineSvgControl);
+  assert.strictEqual($icon.css('backgroundRepeat'), 'no-repeat');
+  assert.strictEqual($icon.css('backgroundPosition'), 'right 10px 50%');
+  assert.strictEqual($icon.css('backgroundSize'), 'auto');
+  assert.strictEqual($icon.css('display'), 'inline');
+  assert.strictEqual($icon.css('margin'), '0px');
+  assert.strictEqual($icon.css('paddingTop'), '0px');
+  assert.strictEqual($icon.css('paddingLeft'), '0px');
+  assert.strictEqual($icon.css('paddingBottom'), '0px');
+  assert.strictEqual($icon.css('paddingRight'), '54px');
 });
 
 QUnit.test("Assert SASS smart_bg() theme--left works.", function(assert) {

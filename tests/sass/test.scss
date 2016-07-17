@@ -27,16 +27,22 @@
     @include svg_smart_bg('icon', 'right center', 10px);
   }
   &.theme--leftpx {
-    @include svg_smart_bg('icon', (10px, center), 10px);
+    @include svg_smart_bg('icon', 10px center, 20px);
+  }
+  &.theme--rightpx {
+    @include svg_smart_bg('icon', right 10px center, 20px);
   }
   &.theme--top {
     @include svg_smart_bg('icon', 'center top', 10px);
   }
   &.theme--toppx {
-    @include svg_smart_bg('icon', (center, 10px), 10px);
+    @include svg_smart_bg('icon', center 10px, 20px);
   }
   &.theme--bottom {
     @include svg_smart_bg('icon', 'center bottom', 10px);
+  }
+  &.theme--bottompx {
+    @include svg_smart_bg('icon', bottom 10px center, 20px);
   }
 }
 

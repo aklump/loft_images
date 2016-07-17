@@ -11,8 +11,7 @@
   @if $full == true {
     max-width: none;
     width: 100%;
-  }
-  @else {
+  } @else {
     max-width: 100%;
     width: auto;
   }
@@ -38,7 +37,7 @@
 @mixin loft-images-dimensions($image_path, $dimensions: null) {
   $_dimensions: _loft-images-dimensions($image_path, $dimensions);
   width: nth($_dimensions, 1);
-  height: nth($_dimensions, 2);  
+  height: nth($_dimensions, 2);
 }
 
 //
@@ -103,7 +102,7 @@
   overflow: hidden;
   @if $inner {
     #{$inner} {
-      @include loft-images-fill-parent; 
+      @include loft-images-fill-parent;
     }
   }
 }
@@ -153,7 +152,7 @@
 //   } 
 //
 @mixin loft-images-hover_overlay($opacity, $position: $loft-images-hover_overlay_position_default, $speed: $loft-images-hover_overlay_speed_default, $color: $loft-images-hover_overlay_color_default) {
-  
+
   @if type-of($position) == 'string' {
     position: unquote($position);
   }
@@ -169,6 +168,10 @@
   }
 }
 
+// $bg_pos: one of:
+// - left|center|right|units top|center|bottom|units
+// - right units bottom units
+// In CSS3, we can specify up to four values for background-position. The first two values represent the horizontal axis. The second two values represent the vertical axis.
 
 @mixin loft-images-smart-background($filename, $bg_pos, $gap: 0) {
   $_padding--v: null;
@@ -180,8 +183,7 @@
     $_split: str-index($bg_pos, ' ');
     @if $_split {
       $bg_pos: (str-slice($bg_pos, 0, $_split - 1), str-slice($bg_pos, $_split + 1));
-    }
-    @else {
+    } @else {
       $bg_pos: ($bg_pos, 'center');
     }
   }
@@ -189,64 +191,70 @@
   @if type-of($bg_pos) != 'list' {
     @warn 'bg_pos argument should be a list, e.g., 10px bottom';
   }
+
+  // Decide if we have 4 or 2 values
+  //@debug 'pass';
   $_pos--h: nth($bg_pos, 1);
   $_pos--v: nth($bg_pos, 2);
   $_padding--h: ();
   $_padding--v: ();
 
-  @if $_pos--h {
-    @if $_pos--h != 'center' {
-      $_padding--h: "left";
-    }
-    // @if $_pos--h == 'center' {
-    //   $_padding--h: "left" "right";
-    // }
-    @if $_pos--h == 'right' {
-      $_padding--h: "right";
-      $_pos--h: 0;
-    }
-    @elseif $_pos--h == 'left' {
-      $_pos--h: 0; 
-    }
+  // four value format
+  @if length($bg_pos) > 2 {
+    $_padding--h: nth($bg_pos, 1);
+    $_pos--h: nth($bg_pos, 2);
+    $_padding--v: nth($bg_pos, 3);
+    $_pos--v: if (index($bg_pos, 4), th($bg_pos, 4), 0);
   }
-  @if $_pos--v {
-    @if $_pos--v != 'center' {
-      $_padding--v: "top";
+
+    // older, two value format
+  @else {
+    @if $_pos--h {
+      @if $_pos--h != 'center' {
+        $_padding--h: "left";
+      }
+      // @if $_pos--h == 'center' {
+      //   $_padding--h: "left" "right";
+      // }
+      @if $_pos--h == 'right' {
+        $_padding--h: "right";
+        $_pos--h: 0;
+      } @else if $_pos--h == 'left' {
+        $_pos--h: 0;
+      }
     }
-    @if $_pos--v == 'bottom' {
-      $_padding--v: "bottom";
-      $_pos--v: 0;
-    }
-    @elseif $_pos--v == 'top' {
-      $_pos--v: 0;
+    @if $_pos--v {
+      @if $_pos--v != 'center' {
+        $_padding--v: "top";
+      }
+      @if $_pos--v == 'bottom' {
+        $_padding--v: "bottom";
+        $_pos--v: 0;
+      } @else if $_pos--v == 'top' {
+        $_pos--v: 0;
+      }
     }
   }
 
-  
   @if $_padding--h != null {
     $_gap: $gap + $_pos--h;
     $_width: image_width($filename);
     @each $_attr in $_padding--h {
       @if $gap == 0 or unit($gap) == 'px' {
         padding-#{$_attr}: $_width + $_gap;
-      }
-      @else {
-        padding-#{$_attr}: calc(${$_width} + #{$_gap});
+      } @else {
+        padding-#{$_attr}: calc(#{$_width} + #{$_gap});
       }
     }
   }
 
-  
-
   @if $_padding--v != null {
     $_gap: $gap + $_pos--v;
-
     @each $_attr in $_padding--v {
       @if $gap == 0 or unit($gap) == 'px' {
         padding-#{$_attr}: $_height + $_gap;
-      }
-      @else {
-        padding-#{$_attr}: calc(${$_height} + #{$_gap});
+      } @else {
+        padding-#{$_attr}: calc(#{$_height} + #{$_gap});
       }
     }
   }
@@ -258,10 +266,10 @@
 
 @mixin loft-images-background-position($position) {
   @if $position {
-    @if typeof $position == 'list' {
-      $position: loft-images-implode($position, ' ');
-    }
-    background-position: unquote($position);
+    @if typeof
+    $position == 'list' {
+    $position: loft-images-implode($position, ' ');
+  } background-position: unquote($position);
   }
 }
 
@@ -271,9 +279,8 @@
     $e: nth($list, $i);
     @if type-of($e) == list {
       $result: $result#{loft-images-implode($e, $glue, true)};
-    }
-    @else {
-      $result: if($i != length($list) or $is_nested, $result#{$e}#{$glue}, $result#{$e});
+    } @else {
+      $result: if($i != length($list) or $is_nested, $result #{$e}#{$glue}, $result#{$e});
     }
   }
 
@@ -282,6 +289,6 @@
 
 @function _loft-images-basename($filename, $fallback_ext: null) {
   $fallback_ext: $loft-images-svg_fallback_extension !default;
-  @return "#{$filename}.#{$fallback_ext}";  
+  @return "#{$filename}.#{$fallback_ext}";
 }
 

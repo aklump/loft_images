@@ -57,12 +57,22 @@
     background-image: url('/tests/images/icon.png?1445973775'); }
 .group-background__span.theme--leftpx {
   background-repeat: no-repeat;
-  background-position: 10px center;
+  background-position:  10px center;
   background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+aWNvbjwvdGl0bGU+PGNpcmNsZSBjeD0iMzcyIiBjeT0iMTY5IiByPSIxMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM2MCAtMTU3KSIgZmlsbD0iIzQ5OTBFMiIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+');
   min-width: 24px;
   min-height: 24px;
-  padding-left: 44px; }
+  padding-left: 54px; }
   html.modernizr-no-svg .group-background__span.theme--leftpx {
+    background-image: url('/tests/images/icon.png?1445973775'); }
+.group-background__span.theme--rightpx {
+  background-repeat: no-repeat;
+  background-position:  right  10px center;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+aWNvbjwvdGl0bGU+PGNpcmNsZSBjeD0iMzcyIiBjeT0iMTY5IiByPSIxMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM2MCAtMTU3KSIgZmlsbD0iIzQ5OTBFMiIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+');
+  min-width: 24px;
+  min-height: 24px;
+  padding-right: 54px;
+  padding-center: 24px20pxif th(right 10px center, 4), 0; }
+  html.modernizr-no-svg .group-background__span.theme--rightpx {
     background-image: url('/tests/images/icon.png?1445973775'); }
 .group-background__span.theme--top {
   background-repeat: no-repeat;
@@ -75,11 +85,11 @@
     background-image: url('/tests/images/icon.png?1445973775'); }
 .group-background__span.theme--toppx {
   background-repeat: no-repeat;
-  background-position: center 10px;
+  background-position:  center 10px;
   background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+aWNvbjwvdGl0bGU+PGNpcmNsZSBjeD0iMzcyIiBjeT0iMTY5IiByPSIxMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM2MCAtMTU3KSIgZmlsbD0iIzQ5OTBFMiIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+');
   min-width: 24px;
   min-height: 24px;
-  padding-top: 44px; }
+  padding-top: 54px; }
   html.modernizr-no-svg .group-background__span.theme--toppx {
     background-image: url('/tests/images/icon.png?1445973775'); }
 .group-background__span.theme--bottom {
@@ -90,6 +100,16 @@
   min-height: 24px;
   padding-bottom: 34px; }
   html.modernizr-no-svg .group-background__span.theme--bottom {
+    background-image: url('/tests/images/icon.png?1445973775'); }
+.group-background__span.theme--bottompx {
+  background-repeat: no-repeat;
+  background-position:  bottom  10px center;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+aWNvbjwvdGl0bGU+PGNpcmNsZSBjeD0iMzcyIiBjeT0iMTY5IiByPSIxMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTM2MCAtMTU3KSIgZmlsbD0iIzQ5OTBFMiIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+');
+  min-width: 24px;
+  min-height: 24px;
+  padding-bottom: 54px;
+  padding-center: 24px20pxif th(bottom 10px center, 4), 0; }
+  html.modernizr-no-svg .group-background__span.theme--bottompx {
     background-image: url('/tests/images/icon.png?1445973775'); }
 
 .grandpa {
