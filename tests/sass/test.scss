@@ -42,7 +42,13 @@
     @include svg_smart_bg('icon', 'center bottom', 10px);
   }
   &.theme--bottompx {
-    @include svg_smart_bg('icon', bottom 10px center, 20px);
+    @include svg_smart_bg('icon', center bottom 10px, 20px);
+  }
+  &.theme--rightbottom10px {
+    @include svg_smart_bg('icon', right bottom 10px, 20px);
+  }
+  &.theme--centertop10px {
+    @include svg_smart_bg('icon', center top 10px, 20px);
   }
 }
 
