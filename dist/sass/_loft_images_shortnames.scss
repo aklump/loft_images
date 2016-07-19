@@ -41,6 +41,10 @@
   @include loft-images-svg-smart_background($filename, $bg_pos, $gap, $fallback_ext);
 }
 
+@mixin svg-smart-bg-position($filename, $bg_pos: center, $gap: 0, $fallback_ext: null) {
+  @include loft-images-svg-smart_background-position($filename, $bg_pos, $gap, $fallback_ext);
+}
+
 @mixin svg-bg($filename, $bg_pos: center, $fallback_ext: null) {
   @include loft-images-svg-background($filename, $bg_pos, $fallback_ext);
 }
