@@ -49,16 +49,16 @@
 // @endcode
 // 
 @mixin loft_images_svg_scalable_icon($filename, $fallback_ext: null, $dimensions: null) {
-  $_image_path : _loft_images_basename($filename, $fallback_ext);
-  $_dimensions : _loft_images_dimensions($_image_path, $dimensions);
-  $_width      : nth($_dimensions, 1);
-  $_height     : nth($_dimensions, 2);
-  
+  $_image_path: _loft_images_basename($filename, $fallback_ext);
+  $_dimensions: _loft_images_dimensions($_image_path, $dimensions);
+  $_width: nth($_dimensions, 1);
+  $_height: nth($_dimensions, 2);
+
   @include loft-images-dimensions($_image_path, _dimensions);
-  &>span {
+  & > span {
     @include aspect-ratio($_width, $_height, '>span');
   }
-  &>span>span>span {
+  & > span > span > span {
     @include loft_images_svg_icon($filename, $fallback_ext, (100%, 100%));
     background-size: contain;
   }
@@ -109,7 +109,6 @@
 }
 
 //
-//
 // Automatically applies padding based on image size (+gap) so the bg is not
 // covered by the element content.
 // 
@@ -133,4 +132,13 @@
   $fallback_ext: $loft_images_svg_fallback_extension !default;
   @include loft_images_svg_background($filename, $bg_pos, $fallback_ext);
   @include loft_images_smart_background("#{$filename}.#{$fallback_ext}", $bg_pos, $gap);
+}
+
+//
+//
+// Adds the bg position without the image.
+//
+@mixin loft-images-svg-smart-background-position($filename, $bg_pos: 'center', $gap: null, $fallback_ext: null) {
+  $fallback_ext: $loft_images_svg_fallback_extension !default;
+  @include loft-images-smart-background-position("#{$filename}.#{$fallback_ext}", $bg_pos, $gap);
 }

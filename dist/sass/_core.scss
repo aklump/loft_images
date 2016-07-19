@@ -174,8 +174,8 @@
 // In CSS3, we can specify up to four values for background-position. The first two values represent the horizontal axis. The second two values represent the vertical axis.
 
 @mixin loft-images-smart-background($filename, $bg_pos, $gap: 0) {
-  $_padding--v: null;
-  $_padding--h: null;
+  $_padding_location--v: null;
+  $_padding_location--h: null;
   $_height: image-height($filename);
 
   // Try to make sense of a string.
@@ -193,83 +193,104 @@
   }
 
   // Decide if we have 4 or 2 values
-  //@debug 'pass';
-  $_pos--h: nth($bg_pos, 1);
-  $_pos--v: nth($bg_pos, 2);
-  $_padding--h: ();
-  $_padding--v: ();
+  $_padding_location--h: 'center';
+  $_padding_location--v: 'center';
+  $_offset--v: 0;
+  $_offset--h: 0;
 
   // four value format
   @if length($bg_pos) > 2 {
-    $_padding--h: nth($bg_pos, 1);
-    $_pos--h: nth($bg_pos, 2);
-    $_padding--v: nth($bg_pos, 3);
-    $_pos--v: if (index($bg_pos, 4), th($bg_pos, 4), 0);
+
+    @if nth($bg_pos, 2) == 'top' or nth($bg_pos, 2) == 'center' or nth($bg_pos, 2) == 'bottom' {
+      // We got something like this:
+      // left top 50px
+      $_padding_location--h: nth($bg_pos, 1);
+      $_offset--h: 0;
+      $_padding_location--v: nth($bg_pos, 2);
+      $_offset--v: nth($bg_pos, 3);
+    } @else {
+      // We got four values left 20px top 50px
+      $_padding_location--h: nth($bg_pos, 1);
+      $_offset--h: nth($bg_pos, 2);
+      $_padding_location--v: nth($bg_pos, 3);
+      @if length($bg_pos) > 3 {
+        $_offset--v: nth($bg_pos, 4);
+      }
+    }
   }
 
     // older, two value format
   @else {
-    @if $_pos--h {
-      @if $_pos--h != 'center' {
-        $_padding--h: "left";
-      }
-      // @if $_pos--h == 'center' {
-      //   $_padding--h: "left" "right";
-      // }
-      @if $_pos--h == 'right' {
-        $_padding--h: "right";
-        $_pos--h: 0;
-      } @else if $_pos--h == 'left' {
-        $_pos--h: 0;
-      }
+    $_padding_location--h: nth($bg_pos, 1);
+    $_padding_location--v: 'center';
+    @if length($bg_pos) > 1 {
+      $_padding_location--v: nth($bg_pos, 2);
     }
-    @if $_pos--v {
-      @if $_pos--v != 'center' {
-        $_padding--v: "top";
-      }
-      @if $_pos--v == 'bottom' {
-        $_padding--v: "bottom";
-        $_pos--v: 0;
-      } @else if $_pos--v == 'top' {
-        $_pos--v: 0;
-      }
+
+    // Test to see if we have non-numbers
+    @if loft-images-is_numeric($_padding_location--h) {
+      $_offset--h: $_padding_location--h;
+      $_padding_location--h: 'left';
+    }
+    @if loft-images-is_numeric($_padding_location--v) {
+      $_offset--v: $_padding_location--v;
+      $_padding_location--v: 'top';
     }
   }
 
-  @if $_padding--h != null {
-    $_gap: $gap + $_pos--h;
+  @if $_padding_location--h == 'center' and $_offset--h != 0 {
+    @error "horizontal background-position 'center' cannot have offset value of #{$_offset--h}";
+  }
+  @if $_padding_location--v == 'center' and $_offset--v != 0 {
+    @error "vertical background-position 'center' cannot have offset value of #{$_offset--v}";
+  }
+
+  @if $_padding_location--h == 'left' or $_padding_location--h == 'right' {
+    $_gap: loft-images-polyunit-sum($gap, $_offset--h);
     $_width: image_width($filename);
-    @each $_attr in $_padding--h {
-      @if $gap == 0 or unit($gap) == 'px' {
-        padding-#{$_attr}: $_width + $_gap;
-      } @else {
-        padding-#{$_attr}: calc(#{$_width} + #{$_gap});
-      }
+    @each $_attr in $_padding_location--h {
+      padding-#{$_attr}: loft-images-polyunit-sum($_width, $_gap);
     }
   }
 
-  @if $_padding--v != null {
-    $_gap: $gap + $_pos--v;
-    @each $_attr in $_padding--v {
-      @if $gap == 0 or unit($gap) == 'px' {
-        padding-#{$_attr}: $_height + $_gap;
-      } @else {
-        padding-#{$_attr}: calc(#{$_height} + #{$_gap});
-      }
+  @if $_padding_location--v == 'top' or $_padding_location--v == 'bottom' {
+    $_gap: loft-images-polyunit-sum($gap, $_offset--v);
+    @each $_attr in $_padding_location--v {
+      padding-#{$_attr}: loft-images-polyunit-sum($_height, $_gap);
     }
   }
 
-  @if $_padding--v == null {
+  @if $_padding_location--v == 0 {
     line-height: $_height;
   }
 }
 
 @mixin loft-images-background-position($position) {
   @if $position {
-    @if typeof
+    @if type-of
     $position == 'list' {
     $position: loft-images-implode($position, ' ');
   } background-position: unquote($position);
+  }
+}
+
+//
+// Adds the smart background positions without the image itself.
+//
+@mixin loft-images-smart-background-position($filename, $bg_pos, $gap: 0) {
+  @include loft_images_smart_background($filename, $bg_pos, $gap);
+  @include loft_images_background_position($bg_pos);
+}
+
+@function loft-images-is_numeric($a) {
+  @return type-of($a) == 'number';
+}
+
+@function loft-images-polyunit-sum($a, $b) {
+  @if unit($a) == unit($b) or $a == 0 or $b == 0 {
+    @return $a + $b;
+  } @else {
+    @return calc(#{$a} + #{$b});
   }
 }
 
