@@ -1,0 +1,40 @@
+//
+//
+// Will disable the efficacy of a <br/> tag.
+//
+@mixin br-disable {
+  content: ' ';
+  &:after {
+    content: ' ';
+  }
+}
+
+//
+//
+// Returns a <br/> tag to normal operation.
+//
+@mixin br-enable {
+  content: initial;
+  &:after {
+    content: initial;
+  } 
+}
+
+@mixin form-button() {
+  -webkit-appearance: textfield;
+  padding: 1px;
+  background-color: transparent;
+  border: none;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  -webkit-appearance: none;
+  -webkit-rtl-ordering: logical;
+  -webkit-user-select: text;  
+  outline: none;
+  line-height: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+}

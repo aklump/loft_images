@@ -1,0 +1,227 @@
+//
+//
+// Sets the root elemenet font size.
+// 
+// @code
+//   html {
+//     @include rem-init;
+//   }
+// @endcode
+//
+@mixin rem-init() {
+  @if variable-exists('font_size_root_element') {
+    @warn "'font_size_root_element' is deprecated, use 'loft_sass_font_size_root_element' instead.";
+    $loft_sass_font_size_root_element: $font_size_root_element !global;
+  }
+  @include loft-sass-rem-init();
+}
+
+//
+//
+// Applies a variable width with fallback
+// 
+// @param list $width E.g., 35px at 320px
+// @param units $_fallback.  Optional fallback to use instead of the first
+//   list item in $width.
+//
+// @mixin variable_width($width, $fallback: 0) {
+//   // format $width: 16px at 1080px
+//   $_at: index($width, at);
+//   @if $_at {
+//     $_vw: nth($width, $_at + 1);
+//     $_width: nth($width, $_at - 1);  
+//     $_variable: $_width / $_vw;
+//     $width: ($_variable * 100vw);
+
+//     @if $fallback == 0 {
+//       $fallback: $_width / $_vw * 100%;
+//     }
+//   }
+
+//   @if $fallback != $width {
+//     width: $fallback;
+//   }
+//   width: $width;
+// }
+
+// 
+// Output font-size (and line-height) in rem with px fallback
+// 
+// @param $size
+//   rem and px: will be converted to rem with px fallback
+//     - "2rem"
+//     - "16px"
+//   % and em will pass through without conversion
+//     - "100%"
+//     - "2em"
+//   vw and vh: you must send a fallback value like this:
+//     - "14.125vw 22px"
+//     - "14.125vw 2rem"
+//   Another way to send in dynamic text width is:
+//     - "14px at 960px"  The font size will be calculated to equal 14px when
+//     the viewport is at 960px.  It will shrink below that and grow above that.
+//     - "14px max at 960px" In this case the font size will be smaller than
+//     14px when the viewport width is less than 960px, will be 14px at 960px
+//     and above 960px, it will never go above 14px.
+//   
+// @param $line_height
+//   Optional, behaves same as $size
+// 
+@mixin font-size($size, $line_height: false, $important: false) {
+  @if variable-exists('font_size_root_element') {
+    @warn "'font_size_root_element' is deprecated, use 'loft_sass_font_size_root_element' instead.";
+    $loft_sass_font_size_root_element: $font_size_root_element !global;
+  }
+
+  $_rem_ratio: $loft_sass_font_size_root_element / 1rem;
+
+  // format $size: 16px max at 1080px
+  // format $size: 16px at 1080px  
+  $_at: index($size, at);
+  $_max: false;
+  @if $_at {
+    $_vw: nth($size, $_at + 1);
+
+    // Pull out the max if it's present.
+    @if index($size, max) {
+      $_max: $_vw;
+      $size: remove($size, 'max');
+      $_at: index($size, at);
+    }
+
+    $_fallback: nth($size, $_at - 1);
+    $_variable: $_fallback / $_vw;
+    $size: ($_variable * 100vw $_fallback);
+  }
+
+  $_fallback: "";
+  @if type-of($size) == list {
+    $_fallback: nth($size, 2);
+    $size: nth($size, 1);
+  }
+
+  $unit: unit($size);
+
+  @if $important {
+    @if $unit == 'rem' {
+      font-size: $size * $_rem_ratio !important;
+      font-size: $size !important;
+    } @else if $unit == 'px' {
+      font-size: $size !important;
+      font-size: $size / $_rem_ratio !important;
+    } @else if $unit == 'vw' or $unit == 'vh' {
+      @if $_fallback == "" {
+        @error "vm or vh units must have a fallback"
+      }
+      @include font-size($_fallback, $line_height, $important);
+      font-size: $size !important;
+
+      @if $_max {
+        @media (min-width: $_max + 1) {
+          @include font-size($_fallback, $line_height, $important);
+        }
+      }
+    } @else {
+      font-size: $size !important;
+    }
+  } @else {
+    @if $unit == 'rem' {
+      font-size: $size * $_rem_ratio;
+      font-size: $size;
+    } @else if $unit == 'px' {
+      font-size: $size;
+      font-size: $size / $_rem_ratio;
+    } @else if $unit == 'vw' or $unit == 'vh' {
+      @if $_fallback == "" {
+        @error "vm or vh units must have a fallback"
+      }
+      @include font-size($_fallback, $line_height);
+      font-size: $size;
+
+      @if $_max {
+        @media (min-width: $_max + 1) {
+          @include font-size($_fallback, $line_height);
+        }
+      }
+    } @else {
+      font-size: $size;
+    }
+  }
+
+  @if $line_height {
+    $unit: unit($line_height);
+    @if $important {
+      @if $unit == 'rem' {
+        line-height: $line_height * $_rem_ratio !important;
+        line-height: $line_height !important;
+      } @else if $unit == 'px' {
+        line-height: $line_height !important;
+        line-height: $line_height / $_rem_ratio !important;
+      } @else {
+        line-height: $line_height !important;
+      }
+    } @else {
+      @if $unit == 'rem' {
+        line-height: $line_height * $_rem_ratio;
+        line-height: $line_height;
+      } @else if $unit == 'px' {
+        line-height: $line_height;
+        line-height: $line_height / $_rem_ratio;
+      } @else {
+        line-height: $line_height;
+      }
+    }
+  }
+}
+
+// Shortcut mixin
+@mixin rem-fallback($property, $values) {
+  @include loft-sass-rem-fallback($property, $values);
+}
+
+// 
+// Convert rem to pixels
+// 
+// @param mixed $rem
+// 
+// @return mixed
+// 
+// @see $font_size_root_element
+// 
+@function rem-px($rem) {
+  @return loft-sass-rem-px($rem);
+}
+
+// 
+// Convert pixels to rem
+// 
+// @param mixed $rem
+// 
+// @return mixed
+// 
+// @see $font_size_root_element
+// 
+@function px-rem($px) {
+  @return loft-sass-px-rem($px);
+}
+
+//
+//
+// Creates a cascade of header tags in decending values based on starting h1
+// 
+// @param $h1Px The size of the h1tag in pixels.
+// @param unit $decrement How many units to decrement each tag by.
+//
+@mixin htag-cascade($h1Px: 24px, $decrement: 2px) {
+  @for $i from 1 through 6 {
+    h#{$i} {
+      @include font-size($h1Px - (($i - 1) * $decrement));
+    }
+  }
+}
+
+@mixin headings {
+  h1, h2, h3, h4, h5, h6 {
+    @content;
+  }
+}

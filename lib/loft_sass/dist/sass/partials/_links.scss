@@ -1,0 +1,111 @@
+//
+// Creates a link cascade map to a element property or it's children's properties.
+// 
+// @code
+//   a {
+//     // Define a map of pseudo elements in the desired order with their
+//     // colors.  You may omit any elements you wish, this is just an example.
+//     $map: (
+//       ('', inherit),
+//       (':link', inherit),
+//       (':visited', #00ff00),
+//       (':hover', #ff0000),
+//       (':active', #ffff00),
+//     );
+//     
+//     // This example applies the cascade to the a tag...
+//     @include link_cascade($map, 'fill', 'svg.logo rect');
+//     
+//     // This example applies the cascade to the svg.logo rect child of the a tag...
+//     @include link_cascade($map, 'fill', 'svg.logo rect');
+//     
+//     // To target more than one child, send a map for the third argument:
+//     @include link_cascade($map, 'fill', ('svg.logo g', 'svg.logo path', 'svg.logo rect'));
+//   }
+// @endcode
+//
+@mixin link-cascade($map, $prop: 'color', $selector: '') {  
+  @each $_map_data in $map {
+    $_pseudo: nth($_map_data, 1);
+    $_color: nth($_map_data, 2);
+    @each $sel in $selector {
+      &#{$_pseudo} #{$sel} {
+        #{$prop}: #{$_color};
+      }
+    }
+  }
+}
+
+//
+// Replaces a link map (pseudo/color) item.
+// 
+// @param $map map Should be a multi-dimensional map as needed for link_cascade.
+// @param $pseudo string The pseudo element for the link cascade
+// @param $color mixed The value to apply to the pseudo element.
+// 
+// @return map
+// 
+// @see link_cascade().
+// 
+// @code
+//   $map: link_map_merge($link_cascade__color, ':link', '#f8f8f8f');
+//   
+//   // You can also pass a map of pseudos if they are to all receive the
+//   // same color...
+//   $map: link_map_merge($link_cascade__color, ('', ':link'), $_color);
+// @endcode
+//
+@function link-map-merge($map, $pseudos, $color) {
+  $_i: 1;
+  
+  @if type_of($pseudos) != 'map' {
+    $pseudos: ($pseudos);
+  }
+
+  @while $_i <= length($map) {
+    $_map_data: nth($map, $_i);
+    @each $pseudo in $pseudos {
+      @if nth($_map_data, 1) == $pseudo {
+        $map: set_nth($map, $_i, ($pseudo, $color));
+      }
+    }
+    $_i: $_i + 1;
+  }
+
+  @return $map;
+}
+
+//
+// Returns the value of a link map by pseudo key.
+//
+@function link-map-get($map, $pseudo) {
+  $_i: 1;
+  @while $_i <= length($map) {
+    $_map_data: nth($map, $_i);
+    @if nth($_map_data, 1) == $pseudo {
+      @return nth($_map_data, 2);
+    }
+    $_i: $_i + 1;
+  }
+
+  @return '';
+}
+
+// 
+// Returns a link cascade map of all a single value
+// 
+// @param  {mixed} $value
+// 
+// @return {map}
+// 
+@function link-map-monovalue($value) {
+  $_map: (
+    ('', $value),
+    (':link', $value),
+    (':visited', $value),
+    (':hover', $value),
+    (':active', $value),
+  );
+
+  @return $_map;
+}

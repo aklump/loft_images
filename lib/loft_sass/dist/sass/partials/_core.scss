@@ -1,0 +1,97 @@
+// Dependencies
+@import "../../lib/SassyStrings/dist/SassyStrings";
+
+// Everything in here needs to be namespaced with loft-sass-
+
+//
+// Adds two numbers of the same unit or returns a calc() expression
+//
+@function loft-sass-add($a, $b) {
+  @if unit($a) == unit($b) or $a == 0 or $b == 0 {
+    @return $a + $b;
+  } @else {
+    @return calc(#{$a} + #{$b});
+  }
+}
+
+//
+// Sets the root element font size.
+//
+// @code
+//   html {
+//     @include rem-init;
+//   }
+// @endcode
+//
+@mixin loft-sass-rem-init() {
+  @if unit($loft_sass_font_size_root_element) != 'px' {
+    @error "loft_sass_font_size_root_element must be in pixels";
+  }
+  font-size: $loft_sass_font_size_root_element;
+}
+
+//
+// Provides rem fallback to pixels.
+//
+// All values must be the same unit
+//
+// @param $property string e.g. margin
+// @param $values string|list e.g. 1.5rem 2rem
+//
+@mixin loft-sass-rem-fallback($property, $values) {
+  @if type-of($values) == "string" {
+    $values: str-explode($values, ' ');
+  }
+  $max: length($values);
+  $fallbackValues: '';
+  $remValues: '';
+  @for $i from 1 through $max {
+    $value: nth($values, $i);
+    $is_rem: type-of($value) == 'number' and unit($value) == 'rem';
+    @if $is_rem {
+      $px: loft-sass-rem-px($value);
+      $fallbackValues: #{$fallbackValues + $px};
+      $remValues: #{$remValues + $value};
+    } @else {
+      $fallbackValues: #{$fallbackValues + $value};
+      $remValues: #{$remValues + $value};
+    }
+    @if $i < $max {
+      $fallbackValues: #{$fallbackValues + ' '};
+      $remValues: #{$remValues + ' '};
+    }
+  }
+  #{$property}: $fallbackValues;
+  @if $fallbackValues != $remValues {
+    #{$property}: $remValues;
+  }
+}
+
+//
+// Convert rem to pixels
+//
+// @param mixed $rem
+//
+// @return mixed
+//
+// @see $font_size_root_element
+//
+@function loft-sass-rem-px($rem) {
+  $_ratio: $loft_sass_font_size_root_element / 1rem;
+  @return $rem * $_ratio;
+}
+
+//
+// Convert pixels to rem
+//
+// @param mixed $rem
+//
+// @return mixed
+//
+// @see $font_size_root_element
+//
+@function loft-sass-px-rem($px) {
+  $_ratio: $px / $loft_sass_font_size_root_element;
+  @return 1rem * $_ratio;
+}
+

@@ -49,6 +49,10 @@
   @include loft-images-svg-background($filename, $bg_pos, $fallback_ext);
 }
 
+@mixin svg-bg-img($filename, $fallback_ext: null) {
+  @include loft-images-svg-background-image($filename, $fallback_ext);
+}
+
 //
 //
 // Retina mixins

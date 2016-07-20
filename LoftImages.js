@@ -7,7 +7,7 @@
  * Copyright 2015-2016, Aaron Klump <sourcecode@intheloftstudios.com>
  * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Mon Jul 18 21:43:10 PDT 2016
+ * Date: Wed Jul 20 12:52:54 PDT 2016
  */
 /**
  * @code

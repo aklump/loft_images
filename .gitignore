@@ -1,1 +1,3 @@
 *.psp.md
+/lib/loft_sass/*
+!/lib/loft_sass/dist

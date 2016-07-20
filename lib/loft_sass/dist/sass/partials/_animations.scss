@@ -1,0 +1,75 @@
+@mixin fade-in($speed: $loft-sass-fade--show) {
+  @include animation(fadeIn $speed ease-in-out);
+}
+
+@mixin animation($animate...) {
+  $max: length($animate);
+  $animations: '';
+
+  @for $i from 1 through $max {
+    $animations: #{$animations + nth($animate, $i)};
+
+    @if $i < $max {
+      $animations: #{$animations + ", "};
+    }
+  }
+  -webkit-animation: $animate;
+  -moz-animation:    $animate;
+  -o-animation:      $animate;
+  animation:         $animate;
+}
+
+@mixin keyframes($animationName) {
+  @-webkit-keyframes #{$animationName} {
+    @content;
+  }
+  @-moz-keyframes #{$animationName} {
+    @content;
+  }
+  @-o-keyframes #{$animationName} {
+    @content;
+  }
+  @keyframes #{$animationName} {
+    @content;
+  }
+}
+
+@mixin transition__fade($visible-class, $speed--hide: $loft-sass-fade--hide,$speed--show: $loft-sass-fade--show) {
+  & {
+    @include transition__fade--hide;
+  }
+  &#{$visible-class} {
+    @include transition__fade--show;
+  }
+}
+
+@mixin transition__fade--hide($speed: $loft-sass-fade--hide) {
+  visibility: hidden;
+  @include ls-opacity(0);
+  @include ls-transition-duration($speed);
+}
+
+@mixin transition__fade--show($opacity: 1, $speed: $loft-sass-fade--show) {
+  visibility: visible;
+  @include ls-opacity($opacity);
+  @include ls-transition-duration($speed);
+}
+
+// So we don't have to require compass
+@mixin ls-opacity($opacity) {
+  visibility: visible;
+  @if $opacity < 1 {
+    $_o: $opacity * 100;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$_o});
+  } @else {
+    filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  }
+  opacity: $opacity;
+}
+
+@mixin ls-transition-duration($speed){
+  -moz-transition-duration: $speed;
+  -o-transition-duration: $speed;
+  -webkit-transition-duration: $speed;
+  transition-duration: $speed;
+}

@@ -246,17 +246,17 @@
   }
 
   @if $_padding_location--h == 'left' or $_padding_location--h == 'right' {
-    $_gap: loft-images-polyunit-sum($gap, $_offset--h);
+    $_gap: loft-sass-add($gap, $_offset--h);
     $_width: image_width($filename);
     @each $_attr in $_padding_location--h {
-      padding-#{$_attr}: loft-images-polyunit-sum($_width, $_gap);
+      @include _loft-images-bg-padding($_attr, $_width, $_gap);
     }
   }
 
   @if $_padding_location--v == 'top' or $_padding_location--v == 'bottom' {
-    $_gap: loft-images-polyunit-sum($gap, $_offset--v);
+    $_gap: loft-sass-add($gap, $_offset--v);
     @each $_attr in $_padding_location--v {
-      padding-#{$_attr}: loft-images-polyunit-sum($_height, $_gap);
+      @include _loft-images-bg-padding($_attr, $_height, $_gap);
     }
   }
 
@@ -265,12 +265,37 @@
   }
 }
 
+//
+// Helper function
+//
+// @see loft-images-smart-background()
+//
+@mixin _loft-images-bg-padding($position, $a, $b) {
+  $a--fallback: $a;
+  $b--fallback: $b;
+  $_fallback: false;
+  @if unit($a) == 'rem' {
+    $a--fallback: loft-sass-rem-px($a);
+    $_fallback: true;
+  }
+  @if unit($b) == 'rem' {
+    $b--fallback: loft-sass-rem-px($b);
+    $_fallback: true;
+  }
+  @if $_fallback {
+    @include loft-sass-rem-fallback(padding-#{$position}, loft-sass-add($a--fallback, $b--fallback));
+  }
+  @include loft-sass-rem-fallback(padding-#{$position}, loft-sass-add($a, $b));
+}
+
+//
+// Correctly prints out the background-position with rem fallbacks and list flattening
+//
+// @param $position list|string The values to send to the background-position declaration.
+//
 @mixin loft-images-background-position($position) {
   @if $position {
-    @if type-of
-    $position == 'list' {
-    $position: loft-images-implode($position, ' ');
-  } background-position: unquote($position);
+    @include loft-sass-rem-fallback('background-position', $position);
   }
 }
 
@@ -284,14 +309,6 @@
 
 @function loft-images-is_numeric($a) {
   @return type-of($a) == 'number';
-}
-
-@function loft-images-polyunit-sum($a, $b) {
-  @if unit($a) == unit($b) or $a == 0 or $b == 0 {
-    @return $a + $b;
-  } @else {
-    @return calc(#{$a} + #{$b});
-  }
 }
 
 @function loft-images-implode($list, $glue: '', $is_nested: false) {
@@ -312,4 +329,3 @@
   $fallback_ext: $loft-images-svg_fallback_extension !default;
   @return "#{$filename}.#{$fallback_ext}";
 }
-

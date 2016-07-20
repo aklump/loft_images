@@ -99,9 +99,14 @@
   // Embeds our svg as a data uri to eliminate an http request.
   background-repeat: no-repeat;
   @include loft_images_background_position($bg_pos);
-  background-image: inline-image("#{$filename}.svg", "image/svg+xml");
   min-width: image-width("#{$filename}.#{$fallback_ext}");
   min-height: image-height("#{$filename}.#{$fallback_ext}");
+  @include loft-images-svg-background-image($filename, $fallback_ext);
+}
+
+@mixin loft-images-svg-background-image($filename, $fallback_ext: null) {
+  $fallback_ext: $loft_images_svg_fallback_extension !default;
+  background-image: inline-image("#{$filename}.svg", "image/svg+xml");
   html.#{$loft_images_modernizr_prefix}no-svg & {
     // Will only load this if modernizr detects no svn support.
     background-image: image-url("#{$filename}.#{$fallback_ext}");

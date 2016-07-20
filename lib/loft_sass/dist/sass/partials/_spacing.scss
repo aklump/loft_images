@@ -1,0 +1,126 @@
+//
+// Sets the padding for left and right to the same.
+// 
+// @param mixed $padding
+// 
+@mixin hpadding($padding) {
+  padding-left: $padding;
+  padding-right: $padding;
+}
+
+//
+// Sets the padding for top and bottom to the same.
+// 
+// @param mixed $padding
+// 
+@mixin vpadding($padding) {
+  padding-top: $padding;
+  padding-bottom: $padding;
+}
+
+//
+// Sets the margin for left and right to the same.
+// 
+// @param mixed $margin
+// 
+@mixin hmargin($margin) {
+  margin-left: $margin;
+  margin-right: $margin;
+}
+
+//
+// Sets the margin for top and bottom to the same.
+// 
+// @param mixed $margin
+// 
+@mixin vmargin($margin) {
+  margin-top: $margin;
+  margin-bottom: $margin;
+}
+
+//
+//
+// Makes an element centered.
+//
+@mixin center() {
+  display: block;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;  
+}
+
+//
+// Convert pixels to inches
+// 
+// @param float $inches
+// 
+// @return float The value in pixels.
+// 
+@function inches-to-px($inches) {
+  @return ($inches * $inches_to_px_dpi) * 1px;
+}
+
+//
+//
+// Mixin to vertically align a child inside of the selected.
+// 
+// @param string $childSelector This child will be vertically centered
+//   inside of the element.
+// @param string $spacerSelector Unless this is null, a pseudo element
+//   will be created at 100% to set the alignment.  Use 'default' to include
+//   the default selector.
+// @param percent $offsetPercentage You can move center by a percentage amount
+//   where 10% would shift the center down by 10% of the height and -10%
+//   would move the center point up by 10%;
+// 
+// - You must specify a height on the selected element!
+// - Works best with a single child, or when all siblings are absolutely
+//   positioned.
+// 
+// <div class="titling"><div class="title">Title</div></div>
+// 
+//   .titling {
+//     @include vcenter_child('.title');
+//   }
+//
+@mixin vcenter-child($childSelector: '>div', $spacerSelector: 'default', $offsetPercentage: 0) {
+  @if $spacerSelector {
+    
+    @if $spacerSelector == 'default' {
+      $spacerSelector: "&:before";
+    }
+    $_height: 100% + 2 * $offsetPercentage;
+    
+    #{$spacerSelector} {
+      content: '';
+      display: inline-block;
+      height: $_height;
+      vertical-align: middle;
+      margin-right: -0.25em;
+    }
+  }
+
+  #{$childSelector} {
+    @include vcenter_child_inner;
+  }
+}
+
+@mixin vcenter-child-inner() {
+  display: inline-block;
+  vertical-align: middle;
+  // width: 100%;
+}
+
+@mixin un-vcenter-child($childSelector: '>div', $spacerSelector: '&:before') {
+  @if $spacerSelector {
+    #{$spacerSelector} {
+      content: none;
+    }
+  }
+
+  #{$childSelector} {
+    display: initial;
+    vertical-align: initial;
+    width: initial;  
+  }
+}
