@@ -1,9 +1,8 @@
 // Loft SASS
 @import "../lib/loft_sass/dist/sass/_core";
 
-@import "variables";
-@import "core";
-@import "svg";
-@import "bitmap";
-@import "legacy";
-
+@import "partials/variables";
+@import "partials/core";
+@import "partials/svg";
+@import "partials/bitmap";
+@import "partials/legacy";

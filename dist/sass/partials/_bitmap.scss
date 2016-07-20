@@ -14,12 +14,11 @@
   background-image: image_url($filename + '.' + $ext);
   background-size: contain;
   @media #{$loft_images_retina_media_query} {
-      background-image: image_url($filename + $loft_images_retina_suffix + '.' + $ext);
-  }  
+    background-image: image_url($filename + $loft_images_retina_suffix + '.' + $ext);
+  }
 }
 
-
-// 
+//
 // 
 // Produce a png icon with retina version when needed.
 // 
@@ -33,9 +32,9 @@
   $_filename: _loft_images_basename($filename, $ext);
 
   display: block;
-  @include loft_images_dimensions($_filename, $dimensions);  
+  @include loft_images_dimensions($_filename, $dimensions);
   background-repeat: no-repeat;
-  background-position: center;  
+  background-position: center;
   @include loft_images_retina_background($filename, $ext);
 }
 
@@ -44,7 +43,7 @@
 //   $_dimensions: _loft_images_dimensions($_image_path, $dimensions);
 //   $_width      : nth($_dimensions, 1);
 //   $_height     : nth($_dimensions, 2);
-  
+
 //   width: 100%;
 //   @include aspect-ratio($_width, $_height, '>span');
 //   &>span>span {
@@ -82,9 +81,9 @@
 @mixin loft_images_bitmap_icon($filename, $ext: 'gif', $dimensions: null) {
   $_filename: "#{$filename}.#{$ext}";
   display: block;
-  @include loft_images_dimensions($_filename, $dimensions);  
+  @include loft_images_dimensions($_filename, $dimensions);
   background-repeat: no-repeat;
-  background-position: center;  
+  background-position: center;
   background-image: image_url($_filename);
   background-size: contain;
 }
