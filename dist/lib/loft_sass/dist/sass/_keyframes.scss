@@ -1,0 +1,9 @@
+// You will need to include this file for animation stuff.
+@include keyframes('fadeIn') {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
