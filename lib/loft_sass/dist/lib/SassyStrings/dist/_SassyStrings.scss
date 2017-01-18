@@ -1,4 +1,4 @@
-/*! SassyStrings - v0.0.1 - 2014-02-16 */
+//! SassyStrings - v0.0.1 - 2014-02-16
 @function char-at($string, $index) {
   @if type-of($string) != "string" {
     @warn "`char-at` function expecting a string for $string; #{type-of($string)} given.";

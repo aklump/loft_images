@@ -1,41 +1,77 @@
 //
-// Sets the padding for left and right to the same.
+// Sets the padding for left and right without touching other axis values.
 // 
-// @param mixed $padding
+// @param list|unit $padding
 // 
 @mixin hpadding($padding) {
-  padding-left: $padding;
-  padding-right: $padding;
+  $_left: $padding;
+  $_right: $padding;
+  @if type-of($padding) == 'list' {
+    $_left: nth($padding, 1);
+    $_right: $_left;
+    @if length($padding) > 1 {
+      $_right: nth($padding, 2);
+    }
+  }
+  @include loft-sass-rem-fallback('padding-left', $_left);
+  @include loft-sass-rem-fallback('padding-right', $_right);
 }
 
 //
-// Sets the padding for top and bottom to the same.
+// Sets the padding for top and bottom without touching other axis values.
 // 
-// @param mixed $padding
+// @param list|unit $padding
 // 
 @mixin vpadding($padding) {
-  padding-top: $padding;
-  padding-bottom: $padding;
+  $_top: $padding;
+  $_bottom: $padding;
+  @if type-of($padding) == 'list' {
+    $_top: nth($padding, 1);
+    $_bottom: $_top;
+    @if length($padding) > 1 {
+      $_bottom: nth($padding, 2);
+    }
+  }
+  @include loft-sass-rem-fallback('padding-top', $_top);
+  @include loft-sass-rem-fallback('padding-bottom', $_bottom);
 }
 
 //
-// Sets the margin for left and right to the same.
+// Sets the margin for left and right without touching other axis values.
 // 
-// @param mixed $margin
+// @param list|unit $margin
 // 
 @mixin hmargin($margin) {
-  margin-left: $margin;
-  margin-right: $margin;
+  $_left: $margin;
+  $_right: $margin;
+  @if type-of($margin) == 'list' {
+    $_left: nth($margin, 1);
+    $_right: $_left;
+    @if length($margin) > 1 {
+      $_right: nth($margin, 2);
+    }
+  }
+  @include loft-sass-rem-fallback('margin-left', $_left);
+  @include loft-sass-rem-fallback('margin-right', $_right);
 }
 
 //
-// Sets the margin for top and bottom to the same.
+// Sets the margin for top and bottom without touching other axis values.
 // 
-// @param mixed $margin
+// @param list|unit $margin
 // 
 @mixin vmargin($margin) {
-  margin-top: $margin;
-  margin-bottom: $margin;
+  $_top: $margin;
+  $_bottom: $margin;
+  @if type-of($margin) == 'list' {
+    $_top: nth($margin, 1);
+    $_bottom: $_top;
+    @if length($margin) > 1 {
+      $_bottom: nth($margin, 2);
+    }
+  }
+  @include loft-sass-rem-fallback('margin-top', $_top);
+  @include loft-sass-rem-fallback('margin-bottom', $_bottom);
 }
 
 //
@@ -46,7 +82,7 @@
   display: block;
   text-align: center;
   margin-left: auto;
-  margin-right: auto;  
+  margin-right: auto;
 }
 
 //
@@ -68,12 +104,13 @@
 //   inside of the element.
 // @param string $spacerSelector Unless this is null, a pseudo element
 //   will be created at 100% to set the alignment.  Use 'default' to include
-//   the default selector.
+//   the default selector.  IF YOU ARE PASSING A THIS ELEMENT, YOU DO NOT NEED TO HAVE THIS BE INSIDE A PARENT.
 // @param percent $offsetPercentage You can move center by a percentage amount
 //   where 10% would shift the center down by 10% of the height and -10%
 //   would move the center point up by 10%;
 // 
 // - You must specify a height on the selected element!
+// - Children cannot be floated or it won't work!
 // - Works best with a single child, or when all siblings are absolutely
 //   positioned.
 // 
@@ -85,12 +122,12 @@
 //
 @mixin vcenter-child($childSelector: '>div', $spacerSelector: 'default', $offsetPercentage: 0) {
   @if $spacerSelector {
-    
+
     @if $spacerSelector == 'default' {
       $spacerSelector: "&:before";
     }
     $_height: 100% + 2 * $offsetPercentage;
-    
+
     #{$spacerSelector} {
       content: '';
       display: inline-block;
@@ -121,6 +158,6 @@
   #{$childSelector} {
     display: initial;
     vertical-align: initial;
-    width: initial;  
+    width: initial;
   }
 }

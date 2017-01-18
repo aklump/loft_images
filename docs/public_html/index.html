@@ -1,70 +1,62 @@
-
 <!DOCTYPE html>
 
 <html>
 <head>
-    <title>Index</title>
-    <style type="text/css" media="all">
-      @import url("style.css");
-    </style>
-    <link href="search/tipuesearch.css" rel="stylesheet">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
-    <script src="search/tipuesearch_content.js"></script>
-    <link href="search/tipuesearch.css" rel="stylesheet">
-    <script src="search/tipuesearch_set.js"></script>
-    <script src="search/tipuesearch.min.js"></script>
-
+  <title></title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="page-index">
+<body class="page--index">
 <header>
-<div class="pager">
-  <a href="smart_bg.html" class="prev smart_bg" >&laquo;Smart Bg</a>
+  <div class="pager">
+  <a href="_tasklist.html" class="prev _tasklist">&laquo; Tasklist</a>
   <a href="index.html" class="index">Index</a>
-  <a href="README.html" class="next README">README&raquo;</a>
+  <a href="README.html" class="next readme">Loft Images&raquo;</a>
 </div>
-
 </header>
 
-<div class="search__wrapper">
+  <div class="search__wrapper">
   <form action="search--results.html">
-    <input type="text" name="q" id="tipue_search_input" autocomplete="off" required>
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
   </form>
 </div>
 
-<h1>Index</h1>
-<div class="breadcrumb"><a href="index.html">Index</a></div>
+  <h1>Index</h1>
 
-<section>
-
-<ul class="index"><li><a href="README.html">README</a></li>
-<li><a href="smart_bg.html">Smart Bg</a></li></ul>
+<section><ul class="index">
+      <li><a href="README.html">Loft Images</a></li>
+      <li><a href="smart_bg.html">Smart Background</a></li>
+      <li><a href="_tasklist.html"> Tasklist</a></li>
+  </ul>
 </section>
 
 <div class="search__results">
-  <div id="tipue_search_content"></div>  
+  <div id="tipue_search_content"></div>
 </div>
 
 <footer>
-<div class="pager">
-  <a href="smart_bg.html" class="prev smart_bg" >&laquo;Smart Bg</a>
+  <div class="pager">
+  <a href="_tasklist.html" class="prev _tasklist">&laquo; Tasklist</a>
   <a href="index.html" class="index">Index</a>
-  <a href="README.html" class="next README">README&raquo;</a>
+  <a href="README.html" class="next readme">Loft Images&raquo;</a>
 </div>
-
-
+  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 20 Jul 2016 17:37:35 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 18 Jan 2017 15:07:20 -0800</p>
   </div>
 </footer>
 
-<script>
-$(document).ready(function() {
-  $('#tipue_search_input').tipuesearch();
-});
-</script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
 </body>
 </html>
+

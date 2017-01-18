@@ -95,3 +95,25 @@
   @return 1rem * $_ratio;
 }
 
+// @link http://html5boilerplate.com/
+// @link http://stackoverflow.com/questions/6272787/best-clearfix-ever
+// @link https://www.sitepoint.com/clearing-floats-overview-different-clearfix-methods/
+@mixin loft-sass-clearfix() {
+  &:before,
+  &:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+  }
+
+  &:after {
+    clear: both;
+  }
+
+  /*
+   * For IE 6/7 only
+   * Include this rule to trigger hasLayout and contain floats.
+   */
+  & {
+    *zoom: 1;
+  }
+}

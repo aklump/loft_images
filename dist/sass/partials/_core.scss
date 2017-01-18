@@ -145,23 +145,42 @@
 //
 // Usage:
 //   &.is-not-hover &__image-overlay {
-//     @include loft-images-hover_overlay(0);
+//     @include loft-images-hover-overlay(0);
 //   }
 //   &.is-hover &__image-overlay {
-//     @include loft-images-hover_overlay(.16);
+//     @include loft-images-hover-overlay-appearance(.16);
 //   } 
 //
-@mixin loft-images-hover_overlay($opacity, $position: $loft-images-hover_overlay_position_default, $speed: $loft-images-hover_overlay_speed_default, $color: $loft-images-hover_overlay_color_default) {
-
+@mixin loft-images-hover-overlay($opacity, $position: null, $speed: null, $color: null) {
   @if type-of($position) == 'string' {
     position: unquote($position);
   }
-
+  $position: $loft-images-hover_overlay_position_default !default;
+  $speed: $loft-images-hover_overlay_speed_default !default;
+  $color: $loft-images-hover_overlay_color_default !default;
   &:after {
     content: "";
     @include loft-images-fill-parent;
-    background-color: $color;
-    @include opacity($opacity);
+  }
+  @include loft-images-hover-overlay-appearance($opacity, $color, $speed)
+}
+
+//
+//
+// Alter the overlay appearance: color, opacity, speed.
+//
+// Expecting that loft-images-hover_overlay was originally called.
+//
+// @param hex $color Of the overlay.
+//
+@mixin loft-images-hover-overlay-appearance($opacity: null, $color: null, $speed: null) {
+  &:after {
+    @if ($color) {
+      background-color: $color;
+    }
+    @if ($opacity) {
+      @include opacity($opacity);
+    }
     @if $speed {
       @include transition-duration($speed);
     }
@@ -316,9 +335,9 @@
   @for $i from 1 through length($list) {
     $e: nth($list, $i);
     @if type-of($e) == list {
-      $result: $result#{loft-images-implode($e, $glue, true)};
+      $result: #{$result}loft-images-implode($e, $glue, true);
     } @else {
-      $result: if($i != length($list) or $is_nested, $result #{$e}#{$glue}, $result#{$e});
+      $result: if($i != length($list) or $is_nested, #{$result}#{$e}#{$glue}, #{$result}#{$e});
     }
   }
 
