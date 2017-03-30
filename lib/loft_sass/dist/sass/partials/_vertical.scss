@@ -16,10 +16,19 @@
 // Set a vertical treatment method
 // - $method string One of:
 //    - table
-//    - transform
+//    - translate
 @mixin loft-sass-vertical($method) {
-  $loft_sass_vertical__method: $method !global;
-  @content;
+  @if $method == 'transform' {
+    @warn 'Method has changed from transform to translate; please update your code';
+    $method: 'translate';
+  }
+  @if $method == 'table' or $method == 'translate' {
+    $loft_sass_vertical__method: $method !global;
+    @content;
+  }
+  @else {
+    @error "Unsupported vertical method: #{$method}"
+  }
 }
 
 // Apply the container style based on the treatment method.
@@ -29,7 +38,7 @@
     display: table;
     width: 100%;
   }
-  @else if ($loft_sass_vertical__method == 'transform') {
+  @else if ($loft_sass_vertical__method == 'translate') {
     position: relative;
   }
 }
@@ -41,7 +50,7 @@
     display: table-cell;
     vertical-align: middle;
   }
-  @else if ($loft_sass_vertical__method == 'transform') {
+  @else if ($loft_sass_vertical__method == 'translate') {
     display: block;
     position: relative;
     top: 50%;

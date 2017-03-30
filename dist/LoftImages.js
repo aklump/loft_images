@@ -7,7 +7,7 @@
  * Copyright 2015-2017, Aaron Klump <sourcecode@intheloftstudios.com>
  * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Wed Jan 18 15:07:58 PST 2017
+ * Date: Wed Mar 29 21:08:34 PDT 2017
  */
 /**
  * @code
@@ -136,6 +136,11 @@ var LoftImages = (function ($, document) {
     noRetinaClassOnRoot : 'no-retina',
     svgClassOnRoot      : 'svgasimg',
     noSvgClassOnRoot    : 'no-svgasimg',
+
+    // Callbacks
+    onInit: null,
+    onBeforeProcessDom: null,
+    onAfterProcessDom: null,
   };
 
   /**
@@ -147,10 +152,11 @@ var LoftImages = (function ($, document) {
    * @return {LoftImages}
    */
   Images.prototype.init = function () {
-    var self    = this;
-    self.svg    = self.isSvg();
-    self.retina = self.isRetina();
-
+    this.svg    = this.isSvg();
+    this.retina = this.isRetina();
+    if (this.onInit) {
+      this.onInit.call(this);
+    }
     return this;
   };
 
@@ -160,6 +166,11 @@ var LoftImages = (function ($, document) {
    * @return {[type]} [description]
    */
   Images.prototype.processDom = function () {
+
+    if (this.onBeforeProcessDom) {
+      this.onBeforeProcessDom.call(this);
+    }
+
     var self = this;
     var s    = self.settings;
 
@@ -210,6 +221,10 @@ var LoftImages = (function ($, document) {
     // We must call this here if there is nothing to process.
     if (self.pending < 1) {
       decrementPending(self);
+    }
+
+    if (this.onAfterProcessDom) {
+      this.onAfterProcessDom.call(this);
     }
 
     return self;
