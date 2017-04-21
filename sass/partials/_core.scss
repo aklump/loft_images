@@ -109,6 +109,18 @@
 
 //
 //
+// Try to reverse the effect of aspect-ratio
+//
+@mixin loft-images-no-aspect-ratio($width: auto, $height: auto, $position: static) {
+  width: $width;
+  position: $position;
+  height: $height;
+  padding: inherit;
+  overflow: initial;
+}
+
+//
+//
 // Positions element to completely fill its parent container matching
 // height and width.
 //

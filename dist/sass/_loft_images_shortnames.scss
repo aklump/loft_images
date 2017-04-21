@@ -21,6 +21,10 @@
   @include loft-images-aspect_ratio($x, $y, $inner);
 }
 
+@mixin no-aspect-ratio($width: auto, $height: auto, $position: static) {
+  @include loft-images-no-aspect_ratio($width: auto, $height: auto, $position: static);
+}
+
 @mixin fill-parent($position: absolute) {
   @include loft-images-fill_parent($position);
 }
