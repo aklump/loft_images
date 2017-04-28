@@ -11,10 +11,10 @@
 // @see $retina_suffix
 // 
 @mixin loft_images_retina_background($filename, $ext: png) {
-  background-image: image_url($filename + '.' + $ext);
+  background-image: image-url($filename + '.' + $ext);
   background-size: contain;
   @media #{$loft_images_retina_media_query} {
-    background-image: image_url($filename + $loft_images_retina_suffix + '.' + $ext);
+    background-image: image-url($filename + $loft_images_retina_suffix + '.' + $ext);
   }
 }
 
@@ -84,6 +84,6 @@
   @include loft_images_dimensions($_filename, $dimensions);
   background-repeat: no-repeat;
   background-position: center;
-  background-image: image_url($_filename);
+  background-image: image-url($_filename);
   background-size: contain;
 }
