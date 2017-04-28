@@ -191,10 +191,10 @@
       background-color: $color;
     }
     @if ($opacity) {
-      @include opacity($opacity);
+      opacity: $opacity;
     }
     @if $speed {
-      @include transition-duration($speed);
+      transition-duration: $speed;
     }
   }
 }
@@ -278,7 +278,7 @@
 
   @if $_padding_location--h == 'left' or $_padding_location--h == 'right' {
     $_gap: loft-sass-add($gap, $_offset--h);
-    $_width: image_width($filename);
+    $_width: image-width($filename);
     @each $_attr in $_padding_location--h {
       @include _loft-images-bg-padding($_attr, $_width, $_gap);
     }
