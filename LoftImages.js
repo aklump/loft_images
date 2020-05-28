@@ -306,7 +306,7 @@ var LoftImages = (function ($, document) {
     if (window.devicePixelRatio > 1) {
       return true;
     }
-    if (window.matchMedia && window.matchMedia(this.settings.mediaQuery).matches) {
+    if (window.matchMedia && window.matchMedia(this.settings.retinaMediaQuery).matches) {
       return true;
     }
     return false;
