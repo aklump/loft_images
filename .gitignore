@@ -5,3 +5,6 @@
 !/dist/lib/loft_sass/dist
 .idea/
 node_modules/
+documentation/core/cache
+documentation/core/examples
+documentation/core/tests
