@@ -4,10 +4,10 @@
  *
  * Front end Retina and SVG Handling for img tags or background images.
  *
- * Copyright 2015-2017, Aaron Klump <sourcecode@intheloftstudios.com>
+ * Copyright 2015-2020, Aaron Klump <sourcecode@intheloftstudios.com>
  * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Thu May 18 10:07:39 PDT 2017
+ * Date: Thu May 28 12:23:31 PDT 2020
  */
 /**
  * @code
@@ -66,13 +66,12 @@
  * @endcode
  */
 var LoftImages = (function ($, document) {
-
   function Images(settings) {
-    this.version = "1.3.23";
+    this.version = '1.3.23';
 
     // These are the options with default values.
     if (typeof settings === 'string') {
-      settings = {classBase: settings};
+      settings = { classBase: settings };
     }
     this.settings = {};
     $.extend(this.settings, this.options, settings);
@@ -90,30 +89,31 @@ var LoftImages = (function ($, document) {
    */
   Images.prototype.options = {
     // Add this to an img element to indicate this should be an svg
-    // image when supported.  The value of this tag is the non svg 
+    // image when supported.  The value of this tag is the non svg
     // fallback file.  The svg file must use the same filename with
     // the extension of .svg.
     // E.g. <img data-no-svg-src="image.png"/>
     dataSvgAttribute: 'no-svg-src',
 
     // Add this to an img element to indicate this should be a retina
-    // image when supported.  The value of this tag is the non retina 
+    // image when supported.  The value of this tag is the non retina
     // file.  The retina file must use the same filename with
     // the addition of the retinaSuffix, as seen below.
     // E.g. <img data-image-src="image.jpg"/>
-    // 
+    //
     // @see _variables.scss This should match $loft_images_retina_suffix
     dataRetinaAttribute: 'no-retina-src',
 
     // Used to concantenate the non-retina filename with it's extension
-    // For a file image.png it would work like this 
+    // For a file image.png it would work like this
     // 'image' + retinaSuffix + '.png', e.g. image@2x.png
     retinaSuffix: '@2x',
 
     // Defines the media query to use that defines when we have a retina
     // device.
     // @see _variables.scss This should match $loft_images_retina_media_query
-    retinaMediaQuery: '(-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3/2), (min-resolution: 1.5dppx)',
+    retinaMediaQuery:
+      '(-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3/2), (min-resolution: 1.5dppx)',
 
     // When the DOM is processed this will be used as the jQuery context.
     // You may pass an HTML object or a string selector, anything valid to
@@ -131,16 +131,16 @@ var LoftImages = (function ($, document) {
     autoProcessDom: true,
 
     // CSS classnames
-    onceClass          : 'loft-images',
-    retinaClassOnRoot  : 'retina',
+    onceClass: 'loft-images',
+    retinaClassOnRoot: 'retina',
     noRetinaClassOnRoot: 'no-retina',
-    svgClassOnRoot     : 'svgasimg',
-    noSvgClassOnRoot   : 'no-svgasimg',
+    svgClassOnRoot: 'svgasimg',
+    noSvgClassOnRoot: 'no-svgasimg',
 
     // Callbacks
-    onInit            : null,
+    onInit: null,
     onBeforeProcessDom: null,
-    onAfterProcessDom : null
+    onAfterProcessDom: null,
   };
 
   /**
@@ -166,7 +166,6 @@ var LoftImages = (function ($, document) {
    * @return {[type]} [description]
    */
   Images.prototype.processDom = function () {
-
     if (this.settings.onBeforeProcessDom) {
       this.settings.onBeforeProcessDom.call(this);
     }
@@ -182,39 +181,47 @@ var LoftImages = (function ($, document) {
 
     if (self.svg) {
       rootClass += ' ' + s.svgClassOnRoot;
-    }
-    else {
+    } else {
       rootClass += ' ' + s.noSvgClassOnRoot;
     }
     $(s.classRootSelector)
-    // .removeClass('retina no-retina svg no-svg')
-    .removeClass([s.retinaClassOnRoot, s.noRetinaClassOnRoot, s.svgClassOnRoot, s.noSvgClassOnRoot].join(' '))
-    .addClass(rootClass);
+      // .removeClass('retina no-retina svg no-svg')
+      .removeClass(
+        [
+          s.retinaClassOnRoot,
+          s.noRetinaClassOnRoot,
+          s.svgClassOnRoot,
+          s.noSvgClassOnRoot,
+        ].join(' ')
+      )
+      .addClass(rootClass);
 
     // Convert our context to a jQuery object.
-    var $context = self.settings.context ? $(self.settings.context) : $(document);
+    var $context = self.settings.context
+      ? $(self.settings.context)
+      : $(document);
 
     self.pending = 0;
 
     // Calculate our sets to determine when we're done.
-    var $svgSet = $context.find('*[data-' + s.dataSvgAttribute + ']:not(.' + s.onceClass + ')');
+    var $svgSet = $context.find(
+      '*[data-' + s.dataSvgAttribute + ']:not(.' + s.onceClass + ')'
+    );
     self.pending += $svgSet.length;
 
-    var $retinaSet = $context.find('*[data-' + s.dataRetinaAttribute + ']:not(.' + s.onceClass + ')');
+    var $retinaSet = $context.find(
+      '*[data-' + s.dataRetinaAttribute + ']:not(.' + s.onceClass + ')'
+    );
     self.pending += $retinaSet.length;
     self.processed = 0;
 
-    // Process all svg images.    
-    $svgSet
-    .addClass(s.onceClass + '-processed')
-    .each(function () {
+    // Process all svg images.
+    $svgSet.addClass(s.onceClass + '-processed').each(function () {
       self.processSvgImage(this);
     });
 
     // Process all retina images.
-    $retinaSet
-    .addClass(s.onceClass + '-processed')
-    .each(function () {
+    $retinaSet.addClass(s.onceClass + '-processed').each(function () {
       self.processRetinaImage(this);
     });
 
@@ -286,11 +293,10 @@ var LoftImages = (function ($, document) {
   Images.prototype.applySource = function (el, imagePath) {
     el = el instanceof jQuery ? el.get(0) : el;
     var tag = el.nodeName.toLowerCase(),
-        $el = $(el);
+      $el = $(el);
     if (tag === 'img') {
       $el.attr('src', imagePath);
-    }
-    else {
+    } else {
       $el.css('backgroundImage', 'url(' + imagePath + ')');
     }
   };
@@ -306,7 +312,10 @@ var LoftImages = (function ($, document) {
     if (window.devicePixelRatio > 1) {
       return true;
     }
-    if (window.matchMedia && window.matchMedia(this.settings.retinaMediaQuery).matches) {
+    if (
+      window.matchMedia &&
+      window.matchMedia(this.settings.retinaMediaQuery).matches
+    ) {
       return true;
     }
     return false;
@@ -320,12 +329,17 @@ var LoftImages = (function ($, document) {
    * @see  this.svg which is cached during this.init().
    */
   Images.prototype.isSvg = function () {
-    if (typeof Modernizr !== 'undefined' && typeof Modernizr.svgasimg !== 'undefined') {
+    if (
+      typeof Modernizr !== 'undefined' &&
+      typeof Modernizr.svgasimg !== 'undefined'
+    ) {
       return Modernizr.svgasimg;
     }
-    return document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Image', '1.1');
+    return document.implementation.hasFeature(
+      'http://www.w3.org/TR/SVG11/feature#Image',
+      '1.1'
+    );
   };
 
   return Images;
-
 })(jQuery, document);
