@@ -1,0 +1,12 @@
+{
+  "name": "loft_images",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:aklump/loft_images.git",
+  "author": "Aaron Klump <sourcecode@intheloftstudios.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "prettier": "2.0.5"
+  }
+}

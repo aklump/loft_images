@@ -1,0 +1,16 @@
+.idea
+.web_package
+dist
+docs
+documentation
+help
+images
+/includes
+/modules
+node_modules
+vendor
+bower_components
+*.min.js
+/tests/qunit.css
+/tests/qunit.js
+/tests/test.css

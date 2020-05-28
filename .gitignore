@@ -3,3 +3,5 @@
 !/lib/loft_sass/dist
 /dist/lib/loft_sass/*
 !/dist/lib/loft_sass/dist
+.idea/
+node_modules/
