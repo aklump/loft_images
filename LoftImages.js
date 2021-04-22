@@ -203,25 +203,27 @@ var LoftImages = (function ($, document) {
 
     self.pending = 0;
 
+    var processedClass = s.onceClass + '-processed';
+
     // Calculate our sets to determine when we're done.
     var $svgSet = $context.find(
-      '*[data-' + s.dataSvgAttribute + ']:not(.' + s.onceClass + ')'
+      '*[data-' + s.dataSvgAttribute + ']:not(.' + processedClass + ')'
     );
     self.pending += $svgSet.length;
 
     var $retinaSet = $context.find(
-      '*[data-' + s.dataRetinaAttribute + ']:not(.' + s.onceClass + ')'
+      '*[data-' + s.dataRetinaAttribute + ']:not(.' + processedClass + ')'
     );
     self.pending += $retinaSet.length;
     self.processed = 0;
 
     // Process all svg images.
-    $svgSet.addClass(s.onceClass + '-processed').each(function () {
+    $svgSet.addClass(processedClass).each(function() {
       self.processSvgImage(this);
     });
 
     // Process all retina images.
-    $retinaSet.addClass(s.onceClass + '-processed').each(function () {
+    $retinaSet.addClass(processedClass).each(function() {
       self.processRetinaImage(this);
     });
 
