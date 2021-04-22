@@ -4,10 +4,10 @@
  *
  * Front end Retina and SVG Handling for img tags or background images.
  *
- * Copyright 2015-2020, Aaron Klump <sourcecode@intheloftstudios.com>
+ * Copyright 2015-2021, Aaron Klump <sourcecode@intheloftstudios.com>
  * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Thu May 28 12:45:54 PDT 2020
+ * Date: Thu Apr 22 15:45:54 PDT 2021
  */
 /**
  * @code
@@ -218,12 +218,12 @@ var LoftImages = (function ($, document) {
     self.processed = 0;
 
     // Process all svg images.
-    $svgSet.addClass(processedClass).each(function() {
+    $svgSet.addClass(processedClass).each(function () {
       self.processSvgImage(this);
     });
 
     // Process all retina images.
-    $retinaSet.addClass(processedClass).each(function() {
+    $retinaSet.addClass(processedClass).each(function () {
       self.processRetinaImage(this);
     });
 
